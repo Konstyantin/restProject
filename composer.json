@@ -1,0 +1,16 @@
+{
+    "name": "root/rest-project",
+    "authors": [
+        {
+            "name": "Kostya Nagula",
+            "email": "kostya_nagula@mail.ua"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Acme\\": "src/",
+            "App\\": "app/"
+        }
+    }
+}
