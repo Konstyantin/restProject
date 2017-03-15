@@ -8,12 +8,18 @@
  */
 namespace App;
 
+/**
+ * Class Router
+ *
+ * Component for work with route
+ */
 class Router
 {
     /**
      * @var array
      */
     private $routes;
+
     /**
      * Router constructor.
      *
@@ -24,6 +30,7 @@ class Router
         $routePath = ROOT . '/app/config/routes.php';
         $this->routes = include($routePath);
     }
+
     /**
      * Get URI
      *
@@ -41,9 +48,13 @@ class Router
      */
     public function run()
     {
+        // get string form request
         $uri = $this->getURI();
 
+        // Check the presence of such a query  in a array of routes
         foreach ($this->routes as $uriPattern => $path) {
+
+            // Compare $uriPattern and $uri
             if (preg_match("~$uriPattern~", $uri)) {
                 $pos = strpos($uri, $uriPattern);
                 $uri = substr($uri, $pos);
@@ -53,7 +64,7 @@ class Router
     }
 
     /**
-     * Determine Bundle Controller and Action by URI
+     * Define controller, action and params
      *
      * @param string $pattern
      * @param string $path
@@ -62,8 +73,10 @@ class Router
      */
     public function defineComponents($pattern, $path, $uri)
     {
+        // Get internal path of the external rule
         $internalRoute = preg_replace("~$pattern~", $path, $uri);
 
+        // Define controller, action and params
         $segments = explode('/', $internalRoute);
 
         $controllerName = ucfirst(array_shift($segments)) . 'Controller';
@@ -72,22 +85,24 @@ class Router
 
         $parameters = $segments;
 
+        // Path to Controller file
         $controllerFile = ROOT . '/src/Controller/' . $controllerName . '.php';
 
         if (file_exists($controllerFile)) {
 
             include_once($controllerFile);
 
-            $controllerObject = "Acme\\" . $controllerName;
+            $controllerObject = "Acme\\Controller\\" . $controllerName;
 
+            // create new object
             $controllerObject = new $controllerObject;
 
+            // Call action from controller with passed parameters
             $result = call_user_func_array([$controllerObject, $actionName], $parameters);
 
             if ($result != null) {
                 return false;
             }
         }
-
     }
 }
