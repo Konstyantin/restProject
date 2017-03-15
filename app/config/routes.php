@@ -7,6 +7,6 @@
  */
 
 return [
-    'post/' => 'post/view/$1',
-    'post' => 'post/list'
+    'post/' => 'post/itemParam/$1',
+    'post' => 'post/item'
 ];

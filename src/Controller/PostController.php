@@ -8,41 +8,65 @@
  */
 namespace Acme\Controller;
 
-use App\RequestMethod;
+use App\PostCRUD;
+use App\RESTController;
 
-class PostController
+class PostController extends RESTController
 {
-    public function listAction()
-    {
-        $request = new RequestMethod();
-
-        $request->selectMethod($this);
-    }
-
-    public function viewAction(int $id)
-    {
-        $request = new RequestMethod();
-
-        $request->selectMethod($this, $id);
-    }
-
     public function getAction(int $id)
     {
-        return 'get post ' . $id;
+        $crud = new PostCRUD();
+
+        $post = $crud->getOne($id);
+
+        $json = json_encode($post);
+
+        header('Content-Type: application/json');
+
+        echo $json;
     }
 
     public function postAction()
     {
+        $crud = new PostCRUD();
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+
+        $title = $data->title;
+        $author = $data->title;
+        $content = $data->content;
+
+        $crud->create($title, $content, $author);
+
         return 'create new post';
     }
 
     public function putAction(int $id)
     {
-        return 'update post ' . $id;
+        $crud = new PostCRUD();
+
+        $post = $crud->getOne($id);
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+
+        $title = $data->title;
+        $content = $data->content;
+        $author = $data->author;
+
+        if ($post) {
+            $crud->updatePost($id, $title, $content);
+        } else {
+            $crud->create($title, $content, $author);
+        }
     }
 
     public function deleteAction(int $id)
     {
+        $crud = new PostCRUD();
+
+        $crud->delete($id);
         return 'delete post' . $id;
     }
 }
