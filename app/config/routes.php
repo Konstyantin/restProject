@@ -7,5 +7,6 @@
  */
 
 return [
-    'post' => 'post/list',
+    'post/' => 'post/view/$1',
+    'post' => 'post/list'
 ];
