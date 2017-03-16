@@ -9,6 +9,7 @@
 namespace App\DataFormat;
 
 use App\DataFormat\Format;
+use App\Request;
 
 /**
  * Class JsonFormat
@@ -25,6 +26,8 @@ class JsonFormat extends Format
      */
     public static function encode(array $data)
     {
+        Request::setContentType('application/json');
+
         return json_encode($data);
     }
 

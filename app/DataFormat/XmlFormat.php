@@ -9,6 +9,7 @@
 namespace App\DataFormat;
 
 use App\DataFormat\Format;
+use App\Request;
 
 /**
  * Class XmlFormat
@@ -26,17 +27,14 @@ class XmlFormat extends Format
      */
     public static function encode(array $data, $rootNodeName = 'post', $xml=null)
     {
-        if ($xml == null)
-        {
+        if ($xml == null) {
             $xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$rootNodeName />");
         }
 
         // loop through the data passed in.
-        foreach($data as $key => $value)
-        {
+        foreach($data as $key => $value) {
             // no numeric keys in our xml please!
-            if (is_numeric($key))
-            {
+            if (is_numeric($key)) {
                 // make string key...
                 $key = "unknownNode_". (string) $key;
             }
@@ -54,8 +52,9 @@ class XmlFormat extends Format
                 $value = htmlentities($value);
                 $xml->addChild($key,$value);
             }
-
         }
+
+        Request::setContentType('application/xml');
         // pass back as string. or simple xml object if you want!
         return $xml->asXML();
     }
