@@ -8,6 +8,7 @@
  */
 namespace Acme\Controller;
 
+use App\DataFormat\FactoryFormat;
 use App\PostCRUD;
 use App\RESTController;
 
@@ -19,22 +20,25 @@ class PostController extends RESTController
 
         $post = $crud->getOne($id);
 
-        $json = json_encode($post);
+        $factory = new FactoryFormat();
 
-        header('Content-Type: application/json');
+        $data = $factory->encode($post);
 
-        echo $json;
+        echo $data;
     }
 
     public function postAction()
     {
         $crud = new PostCRUD();
 
-        $json = file_get_contents('php://input');
-        $data = json_decode($json);
+        $factory = new FactoryFormat();
+
+        $type =  $_SERVER['CONTENT_TYPE'];
+
+        $data = $factory->decode($type);
 
         $title = $data->title;
-        $author = $data->title;
+        $author = $data->author;
         $content = $data->content;
 
         $crud->create($title, $content, $author);
@@ -48,8 +52,11 @@ class PostController extends RESTController
 
         $post = $crud->getOne($id);
 
-        $json = file_get_contents('php://input');
-        $data = json_decode($json);
+        $factory = new FactoryFormat();
+
+        $type =  $_SERVER['CONTENT_TYPE'];
+
+        $data = $factory->decode($type);
 
         $title = $data->title;
         $content = $data->content;
@@ -67,6 +74,5 @@ class PostController extends RESTController
         $crud = new PostCRUD();
 
         $crud->delete($id);
-        return 'delete post' . $id;
     }
 }
