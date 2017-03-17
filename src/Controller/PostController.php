@@ -43,7 +43,7 @@ class PostController extends RESTController
         if ($post) {
 
             $factory = new FactoryFormat();
-            $data = $factory->encode($post, 'application/xml');
+            $data = $factory->encode($post);
 
             echo $data;
 

@@ -8,6 +8,7 @@
 
 namespace App;
 
+use App\Access\APIToken;
 use App\RequestMethod;
 
 /**
