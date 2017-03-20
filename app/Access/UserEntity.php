@@ -11,7 +11,12 @@ namespace App\Access;
 use App\Db;
 use PDO;
 
-
+/**
+ * Class UserEntity
+ *
+ * Component for work with user
+ * @package App\Access
+ */
 class UserEntity
 {
     /**
@@ -26,6 +31,16 @@ class UserEntity
     public function __construct(int $id)
     {
         $this->userId = $id;
+    }
+
+    /**
+     * Get property userId
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->userId;
     }
 
     /**
@@ -44,7 +59,7 @@ class UserEntity
         $result->bindParam(':id', $this->userId, PDO::PARAM_INT);
         $result->execute();
 
-        return $result->fetch(PDO::FETCH_ASSOC);
+        return $result->fetch(PDO::FETCH_OBJ);
     }
 
     /**
