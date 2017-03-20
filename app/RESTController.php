@@ -8,8 +8,10 @@
 
 namespace App;
 
-use App\Access\APIToken;
+use App\Access\APITokenAuth;
+use App\Access\UserEntity;
 use App\RequestMethod;
+
 
 /**
  * Class RESTController
@@ -22,6 +24,12 @@ class RESTController
      */
     public function itemAction()
     {
+        $auth = new APITokenAuth();
+
+        $user = new UserEntity(1);
+
+        $auth->checkAccess($user);
+
         $request = new RequestMethod();
 
         $request->selectMethod($this);
@@ -34,6 +42,12 @@ class RESTController
      */
     public function itemParamAction(int $id)
     {
+        $auth = new APITokenAuth();
+
+        $user = new UserEntity(1);
+
+        $auth->checkAccess($user);
+
         $request = new RequestMethod();
 
         $request->selectMethod($this, $id);
