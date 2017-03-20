@@ -15,6 +15,8 @@ namespace App;
 class Request
 {
     /**
+     * Get response status
+     *
      * @return int
      */
     public static function getStatus()
@@ -23,6 +25,8 @@ class Request
     }
 
     /**
+     * Set response status
+     *
      * @param int $status
      * @return int
      */
@@ -49,5 +53,42 @@ class Request
     public static function setContentType(string $type)
     {
         return  header('Content-Type: ' . $type);
+    }
+
+    /**
+     * Check exists X-AUTH_TOKEN in response header
+     *
+     * @return bool
+     */
+    public static function checkHeaderToken()
+    {
+        $result = apache_response_headers();
+
+        return ($result['X-AUTH_TOKEN']) ? true : false;
+    }
+
+    /**
+     * Return X-AUTH_TOKEN if token exists
+     *
+     * @return array|false
+     */
+    public static function getAuthToken()
+    {
+        if (self::checkHeaderToken()) {
+            $headerResponse = apache_response_headers();
+            return $headerResponse['X-AUTH_TOKEN'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Set X-AUTH_TOKEN token
+     *
+     * @param string $token
+     */
+    public static function setAuthToken(string $token)
+    {
+        return header('X-AUTH_TOKEN: ' . $token);
     }
 }

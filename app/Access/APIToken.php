@@ -32,11 +32,8 @@ class APIToken
      */
     public function createToken(int $id)
     {
-        // user id
-        $this->tokenData['id'] = $id;
-
-        //time create token
-        $this->tokenData['time'] = time();
+        // set data for generate token
+        $this->setTokenData($id);
 
         $encodeToken = $this->encodeToken($this->tokenData);
 
@@ -72,5 +69,33 @@ class APIToken
     private function decodeToken(string $token)
     {
         return json_decode(base64_decode($token));
+    }
+
+
+    /**
+     * Set token data
+     *
+     * @param int $id id user which checked authentication
+     */
+    private function setTokenData(int $id)
+    {
+        // user id
+        $this->tokenData['id'] = $id;
+
+        //time create token
+        $this->tokenData['time'] = time();
+    }
+
+    /**
+     * Get data stored toked
+     *
+     * Return property object
+     *
+     * @param string $token
+     * @return object
+     */
+    public function getTokenData(string $token)
+    {
+        return $this->decodeToken($token);
     }
 }
