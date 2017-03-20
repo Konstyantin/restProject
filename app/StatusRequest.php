@@ -19,4 +19,5 @@ final class StatusRequest
     const POST_NO_CONTENT = 204;
     const POST_BAD_REQUEST = 400;
     const POST_NOT_FOUND = 404;
+    const POST_FORBIDDEN = 403;
 }

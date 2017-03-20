@@ -29,7 +29,7 @@ class PostCRUD
     {
         $db = Db::connect();
 
-        $sql = "INSERT INTO post (title, content, author) VALUES (:title, :content, :author)";
+        $sql = "INSERT INTO post (title, content, author, created_at) VALUES (:title, :content, :author, UNIX_TIMESTAMP())";
 
         $result = $db->prepare($sql);
         $result->bindParam(':title', $title, PDO::PARAM_STR);
