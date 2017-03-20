@@ -76,8 +76,8 @@ class PostController extends RESTController
         $data = $factory->decode($type);
 
         $title = $data->title ?? null;
-        $author = $data->author ?? null;
         $content = $data->content ?? null;
+        $author = Request::getAuthorByToken();
 
         if ($title && $author && $content) {
             $result = $crud->create($title, $content, $author);
@@ -122,7 +122,6 @@ class PostController extends RESTController
 
         $title = $data->title ?? null;
         $content = $data->content ?? null;
-        $author = $data->author ?? null;
 
         // check passed availability params
         // requirements for update exists post
@@ -131,9 +130,9 @@ class PostController extends RESTController
             $crud->updatePost($id, $title, $content);
             return Request::setStatus(StatusRequest::POST_NO_CONTENT); // status 204
 
-        } elseif ($title && $content && $author) { // requirements for create new post
+        } elseif ($title && $content) { // requirements for create new post
 
-            $crud->create($title, $content, $author);
+            $crud->create($title, $content);
             return Request::setStatus(StatusRequest::POST_CREATED); // status 201
         }
 

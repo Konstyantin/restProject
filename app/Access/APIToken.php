@@ -98,4 +98,16 @@ class APIToken
     {
         return $this->decodeToken($token);
     }
+
+    /**
+     * Get Author by token
+     *
+     * @param string $token
+     * @return mixed
+     */
+    public function getTokenAuthor(string $token)
+    {
+        $tokenData = $this->getTokenData($token);
+        return $tokenData->id;
+    }
 }

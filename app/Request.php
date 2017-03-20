@@ -8,6 +8,8 @@
  */
 namespace App;
 
+use App\Access\APIToken;
+
 /**
  * Class Request
  * @package App
@@ -80,6 +82,20 @@ class Request
         }
 
         return false;
+    }
+
+    /**
+     * Get Author by Token
+     *
+     * Get id Author by send token
+     *
+     * @return mixed
+     */
+    public static function getAuthorByToken()
+    {
+        $apiToken = new APIToken();
+
+        return $apiToken->getTokenAuthor(self::getAuthToken());
     }
 
     /**

@@ -9,7 +9,6 @@
 namespace App\Access;
 
 use App\Db;
-use App\Request;
 use PDO;
 
 /**
