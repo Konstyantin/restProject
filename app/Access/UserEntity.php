@@ -90,7 +90,7 @@ class UserEntity
      * @param string $token
      * @return array
      */
-    public function getUserByToken(string $token)
+    public static function getUserByToken(string $token)
     {
         $db = Db::connect();
         $sql = "SELECT id, name, username FROM user WHERE token = :token";

@@ -9,7 +9,6 @@
 namespace App\Access;
 
 use App\Access\UserEntity;
-use App\Access\TokenLifeCycle;
 use App\Request;
 use App\StatusRequest;
 
@@ -26,49 +25,16 @@ class APITokenAuth
      *
      * @return bool|void
      */
-    public function checkAccess(UserEntity $user)
+    public function checkAccess(string $token)
     {
-        if ($user) {
-
-            $tokenLife = new TokenLifeCycle($user);
-
-            // check lifetime user token if need generate new token
-            if ($tokenLife->supportedToken()) {
-
-                $userToken = $this->getUserToken($user);
-
-                // check match send token and response token
-                $responseToken = $this->checkMatchToken($userToken);
-
-                // if user not found call onAuthFailure
-                $checkToken = $user->getUserByToken($responseToken);
-
-                return (!$checkToken) ? $this->onAuthFailure() : $this->onAuthSuccess();
-            }
-        }
-
-        $this->onAuthFailure();
+        return UserEntity::getUserByToken($token);
     }
 
     /**
-     * Check request and response token
+     * Get user token
      *
-     * @param string $token
-     * @return array|bool|false
-     */
-    public function checkMatchToken(string $token)
-    {
-        Request::setAuthToken($token);
-
-        $responseToken = Request::getAuthToken();
-
-        if ($responseToken === $token) {
-            return $responseToken;
-        }
-        return false;
-    }
-
-    /**
+     * Get token which have user
+     *
      * @param \App\Access\UserEntity $user
      * @return mixed
      */

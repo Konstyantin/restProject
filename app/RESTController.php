@@ -13,7 +13,6 @@ use App\Access\UserEntity;
 use App\RequestMethod;
 use App\Request;
 
-
 /**
  * Class RESTController
  * @package App
@@ -25,38 +24,52 @@ class RESTController
      */
     public function itemAction()
     {
-//            $auth = new APITokenAuth();
-//
-//            $user = new UserEntity(1);
-//
-//            $auth->checkAccess($user);
+        $apiAuth = new APITokenAuth();
+
+        // check exist X-AUTH_TOKEN in header
         if (Request::checkHeaderToken()) {
 
-            $request = new RequestMethod();
+            // X-AUTH_TOKEN
+            $token = Request::getAuthToken();
 
-            $request->selectMethod($this);
+            // check exist user with this passed token
+            if ($apiAuth->checkAccess($token)) {
+
+                $request = new RequestMethod();
+
+                $request->selectMethod($this);
+            }
         }
+
+        $apiAuth->onAuthFailure();
     }
 
     /**
      * Call rest method which take param
      *
      * @param int $id
+     * @return mixed
      */
     public function itemParamAction(int $id)
     {
 
-//            $auth = new APITokenAuth();
-//
-//            $user = new UserEntity(1);
-//
-//            $auth->checkAccess($user);
+        $apiAuth = new APITokenAuth();
 
+        // check exist X-AUTH_TOKEN in header
         if (Request::checkHeaderToken()) {
 
-            $request = new RequestMethod();
+            // X-AUTH_TOKEN
+            $token = Request::getAuthToken();
 
-            $request->selectMethod($this, $id);
+            // check exist user with this passed token
+            if ($apiAuth->checkAccess($token)) {
+
+                $request = new RequestMethod();
+
+                return $request->selectMethod($this, $id);
+            }
         }
+
+        $apiAuth->onAuthFailure();
     }
 }

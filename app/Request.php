@@ -66,7 +66,7 @@ class Request
     {
         $result = getallheaders();
 
-        return ($result['X-AUTH_TOKEN']) ? true : false;
+        return (isset($result['X-AUTH_TOKEN'])) ? true : false;
     }
 
     /**
@@ -96,15 +96,5 @@ class Request
         $apiToken = new APIToken();
 
         return $apiToken->getTokenAuthor(self::getAuthToken());
-    }
-
-    /**
-     * Set X-AUTH_TOKEN token
-     *
-     * @param string $token
-     */
-    public static function setAuthToken(string $token)
-    {
-        return header('X-AUTH_TOKEN: ' . $token);
     }
 }
