@@ -23,7 +23,7 @@ class Request
      */
     public static function getStatus()
     {
-        return (string) http_response_code();
+        return (string)http_response_code();
     }
 
     /**
@@ -54,7 +54,7 @@ class Request
      */
     public static function setContentType(string $type)
     {
-        return  header('Content-Type: ' . $type);
+        return header('Content-Type: ' . $type);
     }
 
     /**
@@ -64,7 +64,7 @@ class Request
      */
     public static function checkHeaderToken()
     {
-        $result = apache_response_headers();
+        $result = getallheaders();
 
         return ($result['X-AUTH_TOKEN']) ? true : false;
     }
@@ -77,7 +77,7 @@ class Request
     public static function getAuthToken()
     {
         if (self::checkHeaderToken()) {
-            $headerResponse = apache_response_headers();
+            $headerResponse = getallheaders();
             return $headerResponse['X-AUTH_TOKEN'];
         }
 

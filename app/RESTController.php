@@ -11,6 +11,7 @@ namespace App;
 use App\Access\APITokenAuth;
 use App\Access\UserEntity;
 use App\RequestMethod;
+use App\Request;
 
 
 /**
@@ -24,15 +25,17 @@ class RESTController
      */
     public function itemAction()
     {
-        $auth = new APITokenAuth();
+//            $auth = new APITokenAuth();
+//
+//            $user = new UserEntity(1);
+//
+//            $auth->checkAccess($user);
+        if (Request::checkHeaderToken()) {
 
-        $user = new UserEntity(1);
+            $request = new RequestMethod();
 
-        $auth->checkAccess($user);
-
-        $request = new RequestMethod();
-
-        $request->selectMethod($this);
+            $request->selectMethod($this);
+        }
     }
 
     /**
@@ -42,14 +45,18 @@ class RESTController
      */
     public function itemParamAction(int $id)
     {
-        $auth = new APITokenAuth();
 
-        $user = new UserEntity(1);
+//            $auth = new APITokenAuth();
+//
+//            $user = new UserEntity(1);
+//
+//            $auth->checkAccess($user);
 
-        $auth->checkAccess($user);
+        if (Request::checkHeaderToken()) {
 
-        $request = new RequestMethod();
+            $request = new RequestMethod();
 
-        $request->selectMethod($this, $id);
+            $request->selectMethod($this, $id);
+        }
     }
 }

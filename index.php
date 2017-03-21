@@ -12,6 +12,7 @@ ini_set('display_startup_errors', 1);
 
 use App\Router;
 use App\Db;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 define('ROOT', dirname(__FILE__));

@@ -114,7 +114,7 @@ class PostController extends RESTController
 
         // get data type
         // default JSON
-        $type =  Request::getContentType();
+        $type = Request::getContentType();
 
         $data = $factory->decode($type);
 
@@ -122,6 +122,7 @@ class PostController extends RESTController
 
         $title = $data->title ?? null;
         $content = $data->content ?? null;
+        $author = Request::getAuthorByToken();
 
         // check passed availability params
         // requirements for update exists post
@@ -132,7 +133,7 @@ class PostController extends RESTController
 
         } elseif ($title && $content) { // requirements for create new post
 
-            $crud->create($title, $content);
+            $crud->create($title, $content, $author);
             return Request::setStatus(StatusRequest::POST_CREATED); // status 201
         }
 
