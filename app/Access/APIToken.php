@@ -10,6 +10,7 @@ namespace App\Access;
 
 /**
  * Class APIToken
+ *
  * @package App\Access
  */
 class APIToken

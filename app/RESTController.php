@@ -37,7 +37,7 @@ class RESTController
 
                 $request = new RequestMethod();
 
-                $request->selectMethod($this);
+                return $request->selectMethod($this);
             }
         }
 

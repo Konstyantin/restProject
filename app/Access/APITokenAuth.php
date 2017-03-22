@@ -62,6 +62,7 @@ class APITokenAuth
      */
     public function onAuthFailure()
     {
-        Request::setStatus(StatusRequest::POST_FORBIDDEN);die();
+        Request::setStatus(StatusRequest::POST_FORBIDDEN);
+        die();
     }
 }

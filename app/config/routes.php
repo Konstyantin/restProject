@@ -6,7 +6,11 @@
  * Time: 20:29
  */
 
+/**
+ * Store route
+ */
 return [
-    'post/' => 'post/itemParam/$1',
-    'post' => 'post/item'
+//    'post/([0-9]+)' => 'post/itemParam/$1',
+    'post/' => 'post/itemParam/$1', // get, delete, put
+    'post' => 'post/item'           // post
 ];
