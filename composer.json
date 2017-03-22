@@ -6,7 +6,9 @@
             "email": "kostya_nagula@mail.ua"
         }
     ],
-    "require": {},
+    "require": {
+        "zircote/swagger-php": "^2.0"
+    },
     "autoload": {
         "psr-4": {
             "Acme\\": "src/",

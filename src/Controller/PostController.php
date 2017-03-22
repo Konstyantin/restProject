@@ -13,26 +13,62 @@ use App\PostCRUD;
 use App\RESTController;
 use App\Request;
 use App\StatusRequest;
+use Swagger\Annotations as SWG;
 
 /**
  * Class PostController
+ *
  * @package Acme\Controller
  */
 class PostController extends RESTController
 {
     /**
-     * Get one Post by $id
-     *
-     * @param int $id
-     *
-     * @ApiDoc(
-     *     statusCodes={
-     *          200 = "Return when success",
-     *          404 = "Return when not found"
-     *     }
+     * @SWG\Get(
+     *     path="/post/{id}",
+     *     description="Return a post on a single ID, if user have access to the post",
+     *     operationId="getAction",
+     *     produces={
+     *          "application/json",
+     *          "application/xml",
+     *     },
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          description="ID of post to fetch",
+     *          required=true,
+     *          type="integer",
+     *          format="int64"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="X-API_KEY",
+     *          in="header",
+     *          description="Authentication Key",
+     *          required=true,
+     *          type="string"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Get post success"
+     *     ),
+     *     @SWG\Response(
+     *          response=403,
+     *          description="When user not authentication"
+     *     ),
+     *     @SWG\Response(
+     *          response=404,
+     *          description="When post by ID not found"
+     *     ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="unexpected error",
+     *          @SWG\Schema(
+     *              ref="#/definitions/ErrorModel"
+     *          )
+     *     )
      * )
      *
-     * @return mixed
+     * @param int $id
+     * @return int
      */
     public function getAction(int $id)
     {
@@ -53,17 +89,56 @@ class PostController extends RESTController
         return Request::setStatus(StatusRequest::POST_NOT_FOUND);
     }
 
+
     /**
      * Create new Post
      *
-     * @ApiDoc(
-     *     statusCodes={
-     *          201 = "Return when success",
-     *          400 = "Return when data error"
-     *     }
+     * @SWG\Post(
+     *     path="/post",
+     *     description="Create new post use send post data",
+     *     operationId="postAction",
+     *     produces={
+     *          "application/json",
+     *          "application/xml",
+     *     },
+     *     @SWG\Parameter(
+     *          name="body",
+     *          in="body",
+     *          description="Post data for new post",
+     *          required=true,
+     *          @SWG\Schema(
+     *              ref="#/definitions/Post"
+     *          ),
+     *     ),
+     *     @SWG\Parameter(
+     *          name="X-API_KEY",
+     *          in="header",
+     *          description="Authentication Key",
+     *          required=true,
+     *          type="string"
+     *     ),
+     *     @SWG\Response(
+     *          response=201,
+     *          description="When new post created success"
+     *     ),
+     *     @SWG\Response(
+     *          response=403,
+     *          description="When user not authentication"
+     *     ),
+     *     @SWG\Response(
+     *          response=400,
+     *          description="When post data is empty"
+     *     ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="unexpected error",
+     *          @SWG\Schema(
+     *              ref="#/definitions/ErrorModel"
+     *          )
+     *     )
      * )
      *
-     * @return string
+     * @return int
      */
     public function postAction()
     {
@@ -93,12 +168,61 @@ class PostController extends RESTController
     /**
      * Update post
      *
-     * @ApiDoc(
-     *     statusCodes={
-     *          204 = "Return when success",
-     *          201 = "Return when new Post"
-     *          400 = "Return when data error"
-     *     }
+     * @SWG\Put(
+     *     path="/post/{id}",
+     *     description="Update select post by id",
+     *     operationId="putAction",
+     *     produces={
+     *          "application/json",
+     *          "application/xml",
+     *     },
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          description="ID of post to fetch",
+     *          required=true,
+     *          type="integer",
+     *          format="int64"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="body",
+     *          in="body",
+     *          description="Post data for update or create new post",
+     *          required=true,
+     *          @SWG\Schema(
+     *              ref="#/definitions/Post"
+     *          ),
+     *     ),
+     *     @SWG\Parameter(
+     *          name="X-API_KEY",
+     *          in="header",
+     *          description="Authentication Key",
+     *          required=true,
+     *          type="string"
+     *     ),
+     *     @SWG\Response(
+     *          response=201,
+     *          description="When new post created success"
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="When post updated success"
+     *     ),
+     *     @SWG\Response(
+     *          response=403,
+     *          description="When user not authentication"
+     *     ),
+     *     @SWG\Response(
+     *          response=400,
+     *          description="When post data is empty"
+     *     ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="unexpected error",
+     *          @SWG\Schema(
+     *              ref="#/definitions/ErrorModel"
+     *          )
+     *     )
      * )
      *
      * @param int $id
@@ -144,11 +268,37 @@ class PostController extends RESTController
     /**
      * Delete post
      *
-     * @ApiDoc(
-     *     statusCodes={
-     *          204 = "Return when success",
-     *          404 = "Return when data error"
-     *     }
+     * @SWG\Delete(
+     *     path="/post/{id}",
+     *     description="Delete post by select ID",
+     *     operationId="deleteAction",
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          description="ID of post to fetch",
+     *          required=true,
+     *          type="integer",
+     *          format="int64"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="X-API_KEY",
+     *          in="header",
+     *          description="Authentication Key",
+     *          required=true,
+     *          type="string"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Delete post success"
+     *     ),
+     *     @SWG\Response(
+     *          response=403,
+     *          description="When user not authentication"
+     *     ),
+     *     @SWG\Response(
+     *          response=404,
+     *          description="When post by ID not found"
+     *     ),
      * )
      *
      * @param int $id

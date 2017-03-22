@@ -78,12 +78,11 @@ class Curl
         // set curl options
         curl_setopt_array($curl, $options);
 
-        // check for errors
-        $this->checkError($curl);
-
         // result execute
         $result = curl_exec($curl);
 
+        // check for errors
+        $this->checkError($result, $curl);
         // response status
         Request::setStatus($this->getStatus($curl));
 
@@ -128,7 +127,7 @@ class Curl
         $result = curl_exec($curl);
 
         // check for errors
-        $this->checkError($curl);
+        $this->checkError($result, $curl);
 
         // response status
         Request::setStatus($this->getStatus($curl));
@@ -174,7 +173,7 @@ class Curl
         $result = curl_exec($curl);
 
         // check for errors
-        $this->checkError($curl);
+        $this->checkError($result, $curl);
 
         // response status
         Request::setStatus($this->getStatus($curl));
@@ -216,7 +215,7 @@ class Curl
         $result = curl_exec($curl);
 
         // check for errors
-        $this->checkError($curl);
+        $this->checkError($result, $curl);
 
         // response status
         Request::setStatus($this->getStatus($curl));
@@ -240,9 +239,9 @@ class Curl
      *
      * @param $curl
      */
-    public function checkError($curl)
+    public function checkError($result, $curl)
     {
-        if (curl_exec($curl) === false) {
+        if ($result === false) {
             echo 'Error' . curl_error($curl);
         }
     }
