@@ -260,7 +260,7 @@ $user = new User(1);
 // implement Curl
 $curl = new Curl($user);
 
-//$curl->getAction(60);         // get
+//$curl->getAction(65);         // get
 //$curl->postAction($data);     // post
-//$curl->putAction(60,$data);   // put
-//$curl->deleteAction(60);      // delete
+//$curl->putAction(94,$data);   // put
+$curl->deleteAction(94);      // delete

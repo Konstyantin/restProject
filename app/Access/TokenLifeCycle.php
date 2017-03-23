@@ -30,7 +30,7 @@ class TokenLifeCycle extends APIToken
     private $tokenExpire;
 
     /**
-     * @var User|\App\Access\UserEntity
+     * @var User|\Acme\Entity\User
      */
     private $user;
 

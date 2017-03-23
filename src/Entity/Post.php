@@ -121,15 +121,15 @@ class Post
         /**
          * Check what parameters are passed
          */
-        if ($title != null && $content != null) {           /* if passed $title and $content */
+        if ($title != null && $content != null) {            /* if passed $title and $content */
 
             return $this->changePost($id, $title, $content);
 
-        } elseif($title) {                                  /* if passed only title */
+        } elseif ($title) {                                  /* if passed only title */
 
             return $this->changePostTitle($id, $title);
 
-        } elseif ($content) {                               /* if passed only content*/
+        } elseif ($content) {                                /* if passed only content*/
 
             return $this->changePostContent($id, $content);
         }
@@ -143,7 +143,7 @@ class Post
      */
     public function delete(int $id)
     {
-        $db  = Db::connect();
+        $db = Db::connect();
         $sql = "DELETE FROM post WHERE id = :id";
 
         $result = $db->prepare($sql);

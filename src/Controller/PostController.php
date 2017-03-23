@@ -79,14 +79,14 @@ class PostController extends RESTController
         if ($post) {
 
             $factory = new FactoryFormat();
-            $data = $factory->encode($post);
+            $data = $factory->encode($post); // second argument set type result JSON|XML
 
             echo $data;
 
-            return Request::setStatus(StatusRequest::POST_SUCCESS);
+            return Request::setStatus(StatusRequest::POST_SUCCESS); // status 200
         }
 
-        return Request::setStatus(StatusRequest::POST_NOT_FOUND);
+        return Request::setStatus(StatusRequest::POST_NOT_FOUND);   // status 404
     }
 
 
@@ -148,21 +148,21 @@ class PostController extends RESTController
 
         $type = Request::getContentType();
 
-        $data = $factory->decode($type);
+        $data = $factory->decode($type); // set type JSON|XML
 
         $title = $data->title ?? null;
         $content = $data->content ?? null;
-        $author = Request::getAuthorByToken();
+        $author = Request::getAuthorByToken(); // get user id from send token
 
         if ($title && $author && $content) {
             $result = $crud->create($title, $content, $author);
 
             if ($result) {
-                return Request::setStatus(StatusRequest::POST_CREATED);
+                return Request::setStatus(StatusRequest::POST_CREATED); // status 201
             }
         }
 
-        return Request::setStatus(StatusRequest::POST_BAD_REQUEST);
+        return Request::setStatus(StatusRequest::POST_BAD_REQUEST);     // status 400
     }
 
     /**
@@ -246,7 +246,7 @@ class PostController extends RESTController
 
         $title = $data->title ?? null;
         $content = $data->content ?? null;
-        $author = Request::getAuthorByToken();
+        $author = Request::getAuthorByToken(); // get user id from send token
 
         // check passed availability params
         // requirements for update exists post

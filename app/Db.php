@@ -54,11 +54,11 @@ class Db
 
             $dsn = "mysql:host={$params['host']};dbname={$params['dbname']}";
 
-            try{
-                self::$instance = new PDO($dsn,$params['user'],$params['password']);
+            try {
+                self::$instance = new PDO($dsn, $params['user'], $params['password']);
                 self::$instance->exec("set names utf8");
                 return self::$instance;
-            }catch (\PDOException $e){
+            } catch (\PDOException $e) {
                 echo "Error connect to database" . $e->getMessage();
             }
         }

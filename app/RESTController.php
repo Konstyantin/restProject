@@ -40,7 +40,7 @@ class RESTController
             }
         }
 
-        $apiAuth->onAuthFailure();
+        $apiAuth->onAuthFailure(); // set status 403
     }
 
     /**
@@ -69,6 +69,6 @@ class RESTController
             }
         }
 
-        $apiAuth->onAuthFailure();
+        $apiAuth->onAuthFailure();  // set status 403
     }
 }
