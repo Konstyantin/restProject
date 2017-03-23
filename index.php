@@ -22,5 +22,3 @@ $router = new Router();
 $router->run();
 
 Db::connect();
-
-$post = new Post();

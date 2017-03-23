@@ -263,4 +263,4 @@ $curl = new Curl($user);
 //$curl->getAction(65);         // get
 //$curl->postAction($data);     // post
 //$curl->putAction(94,$data);   // put
-$curl->deleteAction(94);      // delete
+//$curl->deleteAction(94);      // delete
