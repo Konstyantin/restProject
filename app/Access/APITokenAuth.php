@@ -8,7 +8,7 @@
 
 namespace App\Access;
 
-use App\Access\UserEntity;
+use Acme\Entity\User;
 use App\Request;
 use App\StatusRequest;
 
@@ -27,7 +27,7 @@ class APITokenAuth
      */
     public function checkAccess(string $token)
     {
-        return UserEntity::getUserByToken($token);
+        return User::getUserByToken($token);
     }
 
     /**
@@ -35,10 +35,10 @@ class APITokenAuth
      *
      * Get token which have user
      *
-     * @param \App\Access\UserEntity $user
+     * @param User $user
      * @return mixed
      */
-    public function getUserToken(UserEntity $user)
+    public function getUserToken(User $user)
     {
         $tokenData = $user->getUserTokenData();
 

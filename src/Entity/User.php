@@ -2,22 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: User
- * Date: 20.03.2017
- * Time: 10:53
+ * Date: 23.03.2017
+ * Time: 13:24
  */
 
-namespace App\Access;
+namespace Acme\Entity;
 
-use App\Db;
 use PDO;
+use App\Db;
 
 /**
- * Class UserEntity
+ * Class User
  *
- * Component for work with user
- * @package App\Access
+ * Component for work with users
  */
-class UserEntity
+class User
 {
     /**
      * @var int $userId

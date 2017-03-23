@@ -12,6 +12,7 @@ ini_set('display_startup_errors', 1);
 
 use App\Router;
 use App\Db;
+use Acme\Entity\Post;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -21,3 +22,5 @@ $router = new Router();
 $router->run();
 
 Db::connect();
+
+$post = new Post();

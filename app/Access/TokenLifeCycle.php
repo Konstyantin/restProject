@@ -8,7 +8,7 @@
 
 namespace App\Access;
 
-use App\Access\UserEntity;
+use Acme\Entity\User;
 use App\Access\APIToken;
 
 /**
@@ -30,15 +30,15 @@ class TokenLifeCycle extends APIToken
     private $tokenExpire;
 
     /**
-     * @var \App\Access\UserEntity
+     * @var User|\App\Access\UserEntity
      */
     private $user;
 
     /**
      * TokenLifeCycle constructor.
-     * @param \App\Access\UserEntity $user
+     * @param User $user
      */
-    public function __construct(UserEntity $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
 

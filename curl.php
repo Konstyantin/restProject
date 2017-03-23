@@ -11,7 +11,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 define('ROOT', dirname(__FILE__));
 
 use App\Request;
-use App\Access\UserEntity;
+use Acme\Entity\User;
 use App\Access\TokenLifeCycle;
 
 /**
@@ -23,16 +23,16 @@ use App\Access\TokenLifeCycle;
 class Curl
 {
     /**
-     * @var object UserEntity $user
+     * @var object User user
      */
     private $user;
 
     /**
-     * Curl constructor.
      *
-     * @param UserEntity $user
+     * Curl constructor.
+     * @param User $user
      */
-    public function __construct(UserEntity $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }
@@ -255,7 +255,7 @@ $data = [
 ];
 
 // get user which user_id = 1
-$user = new UserEntity(1);
+$user = new User(1);
 
 // implement Curl
 $curl = new Curl($user);

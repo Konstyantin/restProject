@@ -9,7 +9,7 @@
 namespace Acme\Controller;
 
 use App\DataFormat\FactoryFormat;
-use App\PostCRUD;
+use Acme\Entity\Post;
 use App\RESTController;
 use App\Request;
 use App\StatusRequest;
@@ -72,7 +72,7 @@ class PostController extends RESTController
      */
     public function getAction(int $id)
     {
-        $crud = new PostCRUD();
+        $crud = new Post();
 
         $post = $crud->getOne($id);
 
@@ -142,7 +142,7 @@ class PostController extends RESTController
      */
     public function postAction()
     {
-        $crud = new PostCRUD();
+        $crud = new Post();
 
         $factory = new FactoryFormat();
 
@@ -230,7 +230,7 @@ class PostController extends RESTController
      */
     public function putAction(int $id)
     {
-        $crud = new PostCRUD();
+        $crud = new Post();
 
         $factory = new FactoryFormat();
 
@@ -306,13 +306,13 @@ class PostController extends RESTController
      */
     public function deleteAction(int $id)
     {
-        $crud = new PostCRUD();
+        $crud = new Post();
 
         $post = $crud->getOne($id);
 
         if ($post) {
             $crud->delete($id);
-            return Request::setStatus(StatusRequest::POST_NO_CONTENT);
+            return Request::setStatus(StatusRequest::POST_SUCCESS);
         }
 
         return Request::setStatus(StatusRequest::POST_NOT_FOUND);

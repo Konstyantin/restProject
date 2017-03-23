@@ -9,7 +9,6 @@
 namespace App;
 
 use App\Access\APITokenAuth;
-use App\Access\UserEntity;
 use App\RequestMethod;
 use App\Request;
 
