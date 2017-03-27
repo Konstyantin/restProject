@@ -28,13 +28,55 @@ class Curl
     private $user;
 
     /**
+     * Host for project
+     *
+     * @var string $host
+     */
+    private $host;
+
+    /**
+     * Path to file
+     *
+     * @var string $path
+     */
+    private $path;
+
+    /**
      *
      * Curl constructor.
      * @param User $user
      */
-    public function __construct(User $user)
+    public function __construct(User $user, string $host, string $path)
     {
         $this->user = $user;
+
+        $this->setHost($host);
+        $this->setPath($path);
+
+    }
+
+    /**
+     * Set host
+     *
+     * @param string $host
+     */
+    public function setHost(string $host)
+    {
+        $host = rtrim($host, DIRECTORY_SEPARATOR);
+
+        $this->host = $host;
+    }
+
+    /**
+     * Get path to file
+     *
+     * @param string $path
+     */
+    public function setPath(string $path)
+    {
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
+
+        $this->path = $path;
     }
 
     /**
@@ -59,7 +101,8 @@ class Curl
     public function getAction(int $id)
     {
         // url path
-        $url = 'http://dcodeit.net/kostya.nagula/project/restProject/post/' . $id;
+
+        $url = 'http://' . $this->host .  '/' . $this->path . '/post/' . $id;
 
         // set auth token
         $header = [
@@ -99,7 +142,7 @@ class Curl
     public function postAction(array $data)
     {
         // url path
-        $url = 'http://dcodeit.net/kostya.nagula/project/restProject/post';
+        $url = 'http://' . $this->host .  '/' . $this->path . '/post/';
 
         // header data
         $header = [
@@ -144,7 +187,7 @@ class Curl
     public function putAction(int $id, array $data)
     {
         // url path
-        $url = 'http://dcodeit.net/kostya.nagula/project/restProject/post/' . $id;
+        $url = 'http://' . $this->host .  '/' . $this->path . '/post/' . $id;
 
         // convert post data to JSON
         $jsonPostData = json_encode($data);
@@ -190,7 +233,7 @@ class Curl
     public function deleteAction(int $id)
     {
         // url path
-        $url = 'http://dcodeit.net/kostya.nagula/project/restProject/post/' . $id;
+        $url = 'http://' . $this->host .  '/' . $this->path . '/post/' . $id;
 
         $curl = curl_init();
 
@@ -258,9 +301,9 @@ $data = [
 $user = new User(1);
 
 // implement Curl
-$curl = new Curl($user);
+$curl = new Curl($user, 'dcodeit.net', 'kostya.nagula/project/restProject/');
 
 //$curl->getAction(65);         // get
-//$curl->postAction($data);     // post
+$curl->postAction($data);     // post
 //$curl->putAction(94,$data);   // put
 //$curl->deleteAction(94);      // delete
