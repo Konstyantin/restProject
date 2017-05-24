@@ -9,6 +9,8 @@
 namespace Acme\Controller;
 
 use App\Controller;
+use Acme\Entity\Post;
+
 
 /**
  * Class IndexController
@@ -17,10 +19,18 @@ use App\Controller;
 class IndexController extends Controller
 {
     /**
+     * Index action
+     *
+     * Main page which displayed posts
+     *
      * @return bool
      */
     public function indexAction()
     {
-        return $this->render('index');
+        $post = new Post();
+
+        $postList = $post->getList();
+
+        return $this->render('index', $postList);
     }
 }

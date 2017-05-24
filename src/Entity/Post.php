@@ -68,8 +68,16 @@ class Post
     public function getList()
     {
         $db = Db::connect();
-        $sql = 'SELECT * FROM post';
+
+        $sql = 'SELECT post.id,
+                       post.title,
+                       post.content,
+                       post.created_at,
+                       user.name AS author FROM post
+                  INNER JOIN user ON post.author = user.id';
+
         $result = $db->query($sql);
+
         $postList = [];
         $i = 0;
 
@@ -78,7 +86,7 @@ class Post
             $postList[$i]['title'] = $row['title'];
             $postList[$i]['content'] = $row['content'];
             $postList[$i]['author'] = $row['author'];
-            $postList[$i]['created_at'] = $row['created_at'];
+            $postList[$i]['created_at'] = gmdate("Y-m-d H:i:s", $row['created_at']);
             $i++;
         }
         return $postList;

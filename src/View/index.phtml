@@ -1,1 +1,31 @@
-<h2 class="text-center">Index Controller</h2>
+<div class="container">
+    <div class="row">
+        <h2>Post list</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Author</th>
+                <th>Created at</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <?php foreach ($data as $post): ?>
+                <div class="post-item">
+                    <tr>
+                        <td><?= $post['id']; ?></td>
+                        <td><?= $post['title']; ?></td>
+                        <td><?= $post['content'] ?></td>
+                        <td><?= $post['author'] ?></td>
+                        <td><?= $post['created_at']; ?></td>
+                    </tr>
+                </div>
+            <?php endforeach; ?>
+
+            </tbody>
+        </table>
+    </div>
+</div>

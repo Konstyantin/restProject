@@ -29,6 +29,7 @@ abstract class Controller
     {
         // path to directory which is store view files
         $path = ROOT . '/src/View/' . $view . '.phtml';
+
         if (file_exists($path)) {
             require_once(ROOT . '/app/layout/header.phtml');   // include header layout
             require_once($path);
