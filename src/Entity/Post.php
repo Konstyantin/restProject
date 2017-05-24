@@ -90,7 +90,6 @@ class Post
             $i++;
         }
         return $postList;
-
     }
 
     /**
@@ -197,5 +196,69 @@ class Post
         $result->bindParam(':content', $content, PDO::PARAM_INT);
 
         return $result->execute();
+    }
+
+    /**
+     * Get posts by params
+     *
+     * Get post list by sender params
+     *
+     * @param string|null $column
+     * @param string|null $param ASC|DESC
+     * @return array
+     */
+    public function getListOrderBy(string $column = null, string $param = null)
+    {
+        $db = Db::connect();
+
+        $sql = $this->buildOrderByParams($column, $param);
+
+        $result = $db->query($sql);
+
+        $postList = [];
+        $i = 0;
+
+        while ($row = $result->fetch()) {
+            $postList[$i]['id'] = $row['id'];
+            $postList[$i]['title'] = $row['title'];
+            $postList[$i]['content'] = $row['content'];
+            $postList[$i]['author'] = $row['author'];
+            $postList[$i]['created_at'] = gmdate("Y-m-d H:i:s", $row['created_at']);
+            $i++;
+        }
+
+        return $postList;
+    }
+
+    /**
+     * Build SQL query for get list
+     *
+     * Get Post list by table column and sort param
+     *
+     * @param string|null $column
+     * @param string|null $param ASC|DESC
+     * @return string
+     */
+    public function buildOrderByParams(string $column = null, string $param = null)
+    {
+        $param = $param ?? 'ASC';
+
+        if ($column) {
+            return "SELECT post.id AS id,
+                           post.title,
+                           post.content,
+                           post.created_at,
+                           user.name AS author FROM post
+                            INNER JOIN user ON post.author = user.id
+                           ORDER BY " . $column . " " . $param;
+        }
+
+        return "SELECT post.id AS id,
+                       post.title,
+                       post.content,
+                       post.created_at,
+                       user.name AS author FROM post
+                        INNER JOIN user ON post.author = user.id
+                       ORDER BY id" . " $param";
     }
 }

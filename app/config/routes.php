@@ -13,5 +13,6 @@ return [
 //    'post/([0-9]+)' => 'post/itemParam/$1',
     'post/' => 'post/itemParam/$1', // get, delete, put
     'post' => 'post/item',          // post
-    'index' => 'index/index'
+    'index' => 'index/index',
+    'test' => 'index/test',
 ];

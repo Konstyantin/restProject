@@ -101,7 +101,6 @@ class Curl
     public function getAction(int $id)
     {
         // url path
-
         $url = 'http://' . $this->host .  '/' . $this->path . '/post/' . $id;
 
         // set auth token

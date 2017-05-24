@@ -29,7 +29,7 @@ class IndexController extends Controller
     {
         $post = new Post();
 
-        $postList = $post->getList();
+        $postList = $post->getListOrderBy('created_at');
 
         return $this->render('index', $postList);
     }

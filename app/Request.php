@@ -97,4 +97,25 @@ class Request
 
         return $apiToken->getTokenAuthor(self::getAuthToken());
     }
+
+    /**
+     * Get request method
+     *
+     * @return mixed
+     */
+    protected function getMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    public function getParam(string $param)
+    {
+
+    }
+
+    protected function getParams()
+    {
+
+    }
+
 }

@@ -9,18 +9,22 @@
                 <th>Content</th>
                 <th>Author</th>
                 <th>Created at</th>
+                <th>Manage</th>
             </tr>
             </thead>
             <tbody>
 
             <?php foreach ($data as $post): ?>
-                <div class="post-item">
+                <div class="post-item" id="<?= $post['id']?>">
                     <tr>
                         <td><?= $post['id']; ?></td>
                         <td><?= $post['title']; ?></td>
                         <td><?= $post['content'] ?></td>
                         <td><?= $post['author'] ?></td>
                         <td><?= $post['created_at']; ?></td>
+                        <td>
+                            <div><a href="" class="btn btn-danger">Delete</a></div>
+                        </td>
                     </tr>
                 </div>
             <?php endforeach; ?>

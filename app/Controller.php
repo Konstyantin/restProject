@@ -8,6 +8,7 @@
  */
 namespace App;
 
+use App\Request;
 
 /**
  * Class Controller
@@ -16,7 +17,7 @@ namespace App;
  *
  * @package App
  */
-abstract class Controller
+abstract class Controller extends Request
 {
     /**
      * Render view with layout component
