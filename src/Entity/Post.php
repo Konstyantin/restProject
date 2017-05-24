@@ -261,4 +261,9 @@ class Post
                         INNER JOIN user ON post.author = user.id
                        ORDER BY id" . " $param";
     }
+
+    public function getPagination()
+    {
+
+    }
 }

@@ -10,6 +10,7 @@ namespace Acme\Controller;
 
 use App\Controller;
 use Acme\Entity\Post;
+use App\Pagination;
 
 
 /**
@@ -25,12 +26,25 @@ class IndexController extends Controller
      *
      * @return bool
      */
-    public function indexAction()
+    public function indexAction(int $id = null)
     {
-        $post = new Post();
+        // get active pagination step
+        $active = $id ?? 1;
 
-        $postList = $post->getListOrderBy('created_at');
+        $id = (!$id) ? null : $id - 1;
 
-        return $this->render('index', $postList);
+        $pagination = new Pagination();
+
+        $pagination->setPageRange(10);
+
+        $result = $pagination->getPaginationData(10, null, $id);
+
+        $steps = $pagination->getSteps();
+
+        return $this->render('index', [
+            'result' => $result,
+            'steps' => $steps,
+            'active' => $active
+        ]);
     }
 }

@@ -16,6 +16,8 @@ use Acme\Entity\Post;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+$rootDir = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+define('ROOT_DIR', $rootDir);
 define('ROOT', dirname(__FILE__));
 
 $router = new Router();

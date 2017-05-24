@@ -10,9 +10,9 @@
  * Store route
  */
 return [
-//    'post/([0-9]+)' => 'post/itemParam/$1',
-    'post/' => 'post/itemParam/$1', // get, delete, put
+    'post/([0-9]+)' => 'post/itemParam/$1',
+//    'post/' => 'post/itemParam/$1', // get, delete, put
     'post' => 'post/item',          // post
-    'index' => 'index/index',
-    'test' => 'index/test',
+    'index/' => 'index/index/$1',
+    'index' => 'index/index'
 ];
