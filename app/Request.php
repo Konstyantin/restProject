@@ -108,14 +108,29 @@ class Request
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public function getParam(string $param)
+    /**
+     * Get post param
+     *
+     * Get post param by select param key
+     *
+     * @param string $param
+     * @return mixed
+     */
+    public function getPostParam(string $param)
     {
-
+        return $_POST[$param];
     }
 
+    /**
+     * Get post param
+     *
+     * Get post param array
+     *
+     * @return mixed
+     */
     protected function getParams()
     {
-
+        return $_POST;
     }
 
 }

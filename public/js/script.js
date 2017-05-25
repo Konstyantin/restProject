@@ -1,8 +1,19 @@
 ;(function ($, undefined) {
-
     var app = {
+
         init: function () {
-            console.log('rest client');
+            this.sendData();
+        },
+
+        sendData: function () {
+            $.ajax({
+                url: 'http://localhost/index',
+                method: 'POST',
+                data: {name: 'test'},
+                success: function (data) {
+                    console.log(data);
+                }
+            });
         }
     };
 

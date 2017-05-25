@@ -9,7 +9,6 @@
 namespace Acme\Controller;
 
 use App\Controller;
-use Acme\Entity\Post;
 use App\Pagination;
 
 
