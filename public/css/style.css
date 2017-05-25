@@ -2,6 +2,10 @@
     margin-top: 20px;
 }
 
-.update-post {
+.update-post-btn {
     margin-top: 10px;
+}
+
+.create-post-btn {
+    margin: 10px 0;
 }

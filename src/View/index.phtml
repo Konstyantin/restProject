@@ -1,7 +1,8 @@
 <div class="container">
     <div class="row">
-        <div class="post-container-list">
+        <div class="post-container">
             <h2>Post list</h2>
+            <a href="" class="btn btn-success create-post-btn">Create</a>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -23,12 +24,15 @@
                                     <?= $post->title; ?>
                                 </div>
                             </td>
-                            <td class="post-item-content"><?= $post->content?></td>
+                            <td class="post-item-content">
+                                <div><?= $post->content; ?></div>
+                            </td>
                             <td><?= $post->author ?></td>
                             <td><?= gmdate("Y-m-d H:i:s", $post->created_at);?></td>
                             <td class="post-manage-list">
                                 <div class="post-manage-item">
-                                    <a href="" class="btn btn-danger">Delete</a>
+                                    <a href="" class="btn btn-danger delete-post-btn">Delete</a>
+                                    <a href="" class="btn btn-success edit-post-btn">Edit</a>
                                 </div>
                             </td>
                         </tr>

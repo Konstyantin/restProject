@@ -17,10 +17,9 @@
          *
          * @param route
          */
-        setRouute: function (route) {
+        setRoute: function (route) {
             this.route = route;
         },
-
 
         /**
          * Get current route
@@ -45,9 +44,9 @@
      * Stored template components
      */
     var templateComponent = {
-        postUpdateBtn: '<div class="post-manage-item update-btn"><a href="#" class="btn btn-primary update-post">Update</a></div>',
-        postUpdateTitleField: '<div class="post-update-title-field"><input type="text" name="title" placeholder="title" class="form-control"></div>',
-        postUpdateContentField: '<div class="post-update-content-field"><input type="text" name="content" placeholder="content" class="form-control"></div>',
+        postUpdateBtn: '<div class="post-manage-item"><a href="#" class="btn btn-primary update-post-btn">Update</a></div>',
+        postUpdateTitleField: '<div><input type="text" name="title" placeholder="title" class="form-control title-post-input"></div>',
+        postUpdateContentField: '<div><input type="text" name="content" placeholder="content" class="form-control content-post-input"></div>'
     };
 
     /**
@@ -59,6 +58,8 @@
      */
     function Event() {
 
+        this.fieldComponent = new FieldComponent();
+
         // inherit template component
         this.__proto__ = templateComponent;
 
@@ -69,92 +70,66 @@
             this.delete();
         };
 
-        this.request = new Request();
-
         var that = this,
-            container = $('.post-container-list'),   //container which store post
-            postItem = container.find('.post-item'), //posts
-            deleteBtn = postItem.find('.btn-danger');
+            container = $('.post-container'),
+            listPost = container.find('.post-item'),
+            deleteBtn = listPost.find('.delete-post-btn'),
+            updateBtn = listPost.find('.edit-post-btn');
 
-        // update post
         this.update = function () {
-
-            postItem.on('click', function () {
-
-                var $this = $(this);
-
-                $this.siblings('.post-item').removeClass('active');
-                $this.addClass('active');
-
-
-                $.each(postItem, function () {
-                    that.destroyUpdateFiled(this);
-                });
-
-                if ($this.hasClass('active')) {
-                    return that.buildUpdateField($this);
-                }
-            });
-        };
-
-        // delete post
-        this.delete = function () {
-            deleteBtn.on('click', function (e) {
+            updateBtn.on('click', function (e) {
                 e.preventDefault();
 
                 var $this = $(this),
                     post = $this.parents('.post-item'),
-                    postId = post.attr('id');
+                    titleBlock = post.find('.post-item-title'),
+                    contentBlock = post.find('.post-item-content');
 
-                post.remove();
+                listPost.removeClass('active');
 
-                that.request.sendRequest('post/' + postId, null, 'DELETE');
+                post.addClass('active');
+
+                if (that.fieldComponent.checkExistField(post)) {
+
+                }
+            });
+        };
+
+        this.delete = function () {
+            deleteBtn.on('click', function (e) {
+                e.preventDefault();
             })
         };
 
         this.create = function () {
 
         };
+    }
 
-        /**
-         * Build update field
-         *
-         * Add fields which user for update post item data
-         *
-         * @param post
-         */
-        this.buildUpdateField = function (post) {
-            var titleBlock = post.find('.post-item-title'),
-                contentBlock = post.find('.post-item-content'),
-                manageBlock = post.find('.post-manage-list');
+    function FieldComponent() {
 
-            titleBlock.append(that.postUpdateTitleField);
-            contentBlock.append(that.postUpdateContentField);
-            manageBlock.append(that.postUpdateBtn);
+        this.checkExistField = function (post) {
+            var titleField = post.find('.title-post-input'),
+                contentField = post.find('.content-post-input'),
+                updateBtn = post.find('.update-post-btn');
+
+            return (titleField.length && contentField.length && updateBtn.length) ? true : false;
         };
 
-        /**
-         * Destroy update field
-         *
-         * Remove field which use for update post item
-         *
-         * @param post
-         */
-        this.destroyUpdateFiled = function (post) {
+        this.createEditFieldPost = function (post) {
+            var titleBlock = post.find('.post-item-title'),
+                contentField = post.find('.content-post-input'),
+                updateBtn = post.find('.update-post-btn');
 
-            var post = $(post),
-                titlePostField = post.find('.post-update-title-field'),
-                contentPostField = post.find('.post-update-content-field'),
-                updatePostBtn = post.find('.update-btn');
 
-            if (titlePostField.length && contentPostField.length && updatePostBtn.length) {
-                titlePostField.remove();
-                contentPostField.remove();
-                updatePostBtn.remove();
-            }
         }
     }
 
+    /**
+     * Request
+     *
+     * @constructor
+     */
     function Request() {
 
         this.__proto__ = settings;
@@ -163,12 +138,14 @@
 
             var that = this;
 
-            that.setRouute(route);
+            that.setRoute(route);
 
             $.ajax({
                 url: that.getPath(),
                 type: method,
-                beforeSend: function(xhr){xhr.setRequestHeader('X-AUTH_TOKEN', that.token)},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-AUTH_TOKEN', that.token)
+                },
                 success: function (data) {
                     console.log(data);
                 }
@@ -179,10 +156,9 @@
     function ClientREST() {
 
     }
-    
+
     var event = new Event();
 
     event.init();
-
 
 })(jQuery);
