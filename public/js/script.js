@@ -1,140 +1,87 @@
 ;(function ($, undefined) {
 
-    /**
-     * Store base setting (host|documentRoot|http|route) and setters and getters
-     */
     var settings = {
-
-        host: 'dcodeit.net',
-        documentRoot: '/kostya.nagula/project/restProject/',
-        http: 'http://',
+        host: 'localhost',
+        pathDir: '/',
         route: 'index',
 
-        token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=',
-
-        /**
-         * Set route
-         *
-         * @param route
-         */
-        setRoute: function (route) {
-            this.route = route;
-        },
-
-        /**
-         * Get current route
-         *
-         * @returns {string}
-         */
-        getRoute: function () {
-            return window.location.href;
-        },
-
-        /**
-         * Get stored path to project
-         *
-         * @returns {string}
-         */
-        getPath: function () {
-            return this.http + this.host + this.documentRoot + this.route;
-        }
+        token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0='
     };
 
-    /**
-     * Stored template components
-     */
-    var templateComponent = {
-        postUpdateBtn: '<div class="post-manage-item"><a href="#" class="btn btn-primary update-post-btn">Update</a></div>',
-        postUpdateTitleField: '<div><input type="text" name="title" placeholder="title" class="form-control title-post-input"></div>',
-        postUpdateContentField: '<div><input type="text" name="content" placeholder="content" class="form-control content-post-input"></div>'
+    var template = {
+        postContent: '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
+        postTitle: '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
+        postUpdateBtn: '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>'
     };
 
-    /**
-     * Event class
-     *
-     * Store event which use for update delete and create new posts
-     *
-     * @constructor
-     */
     function Event() {
 
-        this.fieldComponent = new FieldComponent();
+        var that = this,
+            container = $('.post-container'),
+            postList = container.find('.post-item'),
+            createBtn = container.find('.create-post-btn');
 
-        // inherit template component
-        this.__proto__ = templateComponent;
-
-        // call methods
         this.init = function () {
             this.update();
             this.create();
             this.delete();
         };
 
-        var that = this,
-            container = $('.post-container'),
-            listPost = container.find('.post-item'),
-            deleteBtn = listPost.find('.delete-post-btn'),
-            updateBtn = listPost.find('.edit-post-btn');
-
         this.update = function () {
-            updateBtn.on('click', function (e) {
+            postList.on('click', '.edit-post-btn', function (e) {
+               e.preventDefault();
+
+               var $this = $(this),
+                   post = $this.parents('.post-item'),
+                   postId = post.attr('id');
+
+               postList.removeClass('active');
+
+               $.each(postList, function () {
+                   var post = $(this);
+                    that.deleteUpdateField(post);
+               });
+
+               if (!that.checkUpdateField(post)) {
+                   that.buildUpdateField(post);
+               }
+            });
+        };
+
+        this.create = function () {
+            createBtn.on('click', function (e) {
                 e.preventDefault();
 
-                var $this = $(this),
-                    post = $this.parents('.post-item'),
-                    titleBlock = post.find('.post-item-title'),
-                    contentBlock = post.find('.post-item-content');
-
-                listPost.removeClass('active');
-
-                post.addClass('active');
-
-                if (that.fieldComponent.checkExistField(post)) {
-
-                }
+                console.log('create');
             });
         };
 
         this.delete = function () {
-            deleteBtn.on('click', function (e) {
+            postList.on('click', '.delete-post-btn', function (e) {
                 e.preventDefault();
+
+                console.log('delete');
             })
-        };
-
-        this.create = function () {
-
-        };
-    }
-
-    function FieldComponent() {
-
-        this.checkExistField = function (post) {
-            var titleField = post.find('.title-post-input'),
-                contentField = post.find('.content-post-input'),
-                updateBtn = post.find('.update-post-btn');
-
-            return (titleField.length && contentField.length && updateBtn.length) ? true : false;
-        };
-
-        this.createEditFieldPost = function (post) {
-            var titleBlock = post.find('.post-item-title'),
-                contentField = post.find('.content-post-input'),
-                updateBtn = post.find('.update-post-btn');
-
-
         }
     }
 
-    /**
-     * Request
-     *
-     * @constructor
-     */
     function Request() {
 
         this.__proto__ = settings;
 
-        this.sendRequest = function (route, data = null, method) {
+        this.getRoute = function () {
+            return window.location.href;
+        };
+
+        this.setRoute = function (route) {
+            this.route = route;
+        };
+
+        this.getPath = function () {
+            return 'http://' + this.host + '/' + this.route;
+        };
+
+        this.sendRequest = function (route, method, data = null) {
 
             var that = this;
 
@@ -142,23 +89,61 @@
 
             $.ajax({
                 url: that.getPath(),
-                type: method,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-AUTH_TOKEN', that.token)
-                },
+                method: method,
+                data: data,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-AUTH_TOKEN', 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=')},
                 success: function (data) {
-                    console.log(data);
+
                 }
             });
         };
     }
 
-    function ClientREST() {
+    function FormEditor() {
 
+        this.__proto__ = template;
+
+        this.checkUpdateField = function (post) {
+            var title = post.find('.post-title-field'),
+                content = post.find('.post-content-field'),
+                updateBtn = post.find('.update-post-btn');
+
+            return (title.length && content.length && updateBtn.length) ? true :false;
+        };
+
+        this.deleteUpdateField = function (post) {
+            post.find('.post-title-field').remove();
+            post.find('.post-content-field').remove();
+            post.find('.update-post-btn').remove();
+        };
+
+        this.buildUpdateField = function (post) {
+            var titleContainer = post.find('.post-item-title'),
+                containerContainer = post.find('.post-item-content'),
+                postManageList = post.find('.post-manage-list');
+
+            titleContainer.append(this.postTitle);
+            containerContainer.append(this.postContent);
+            postManageList.append(this.postUpdateBtn);
+        }
     }
 
-    var event = new Event();
+    Event.prototype = new FormEditor();
 
-    event.init();
+    function Client() {
+
+        this.event = new Event();
+        this.request = new Request();
+        this.formEdit = new FormEditor();
+        var path = this.request.getPath();
+
+        this.run = function () {
+            this.event.init();
+        }
+    }
+
+    var client = new Client();
+
+    client.run();
 
 })(jQuery);
