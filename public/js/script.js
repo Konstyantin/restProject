@@ -69,8 +69,8 @@
             this.delete();
         };
 
+        this.request = new Request();
 
-        this.testMethod;
         var that = this,
             container = $('.post-container-list'),   //container which store post
             postItem = container.find('.post-item'), //posts
@@ -107,6 +107,8 @@
                     postId = post.attr('id');
 
                 post.remove();
+
+                that.request.sendRequest('post/' + postId, null, 'DELETE');
             })
         };
 
@@ -172,10 +174,6 @@
                 }
             });
         };
-
-        this.test = function () {
-            console.log('test');
-        }
     }
 
     function ClientREST() {
