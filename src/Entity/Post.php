@@ -262,8 +262,63 @@ class Post
                        ORDER BY id" . " $param";
     }
 
-    public function getPagination()
+    /**
+     * Get count steps pagination
+     *
+     * @param int $count
+     * @return float|int
+     */
+    public function getStepCount(int $count)
     {
+        $db = Db::connect();
+
+        $sql = 'SELECT * FROM post';
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        $result = $query->fetchAll(\PDO::FETCH_OBJ);
+
+        return count($result)/$count;
+    }
+
+    /**
+     * Get pagination list
+     *
+     * Get pagination post list by send parama
+     *
+     * @param $range
+     * @param $pageRange
+     * @param $shift
+     * @param null $order
+     * @param string $orderParam
+     * @return array
+     */
+    public function getPaginationList($range, $pageRange, $shift, $order = null, $orderParam = 'ASC')
+    {
+        $db = Db::connect();
+
+        $sql = 'SELECT post.id,
+                       post.title,
+                       post.content,
+                       user.name as author,
+                       post.created_at FROM post
+                        INNER JOIN user ON post.author = user.id LIMIT ' . $pageRange . ' OFFSET ' .  $shift * $range;
+
+        if ($order) {
+            $sql = 'SELECT post.id,
+                       post.title,
+                       post.content,
+                       user.name as author,
+                       post.created_at FROM post
+                        INNER JOIN user ON post.author = user.id ORDER BY ' . $order . ' ' . $orderParam . ' LIMIT ' . $pageRange . ' OFFSET ' .  $shift * $range;
+        }
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        return $query->fetchAll(\PDO::FETCH_OBJ);
 
     }
 }

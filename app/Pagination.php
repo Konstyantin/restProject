@@ -120,27 +120,6 @@ class Pagination
     }
 
     /**
-     * Get count steps
-     *
-     * @param int $count
-     * @return float|int
-     */
-    public function getStepCount(int $count)
-    {
-        $db = Db::connect();
-
-        $sql = 'SELECT * FROM post';
-
-        $query = $db->prepare($sql);
-
-        $query->execute();
-
-        $result = $query->fetchAll(\PDO::FETCH_OBJ);
-
-        return count($result)/$count;
-    }
-
-    /**
      * Get pagination data
      *
      * @param $range
@@ -153,28 +132,8 @@ class Pagination
     {
         $db = Db::connect();
 
-        $this->steps = ceil($this->getStepCount($range));
+        $this->steps = ceil($this->postEntity->getStepCount($range));
 
-        $sql = 'SELECT post.id,
-                       post.title,
-                       post.content,
-                       user.name as author,
-                       post.created_at FROM post
-                        INNER JOIN user ON post.author = user.id LIMIT ' . $this->getPageRange() . ' OFFSET ' .  $shift * $range;
-
-        if ($order) {
-            $sql = 'SELECT post.id,
-                       post.title,
-                       post.content,
-                       user.name as author,
-                       post.created_at FROM post
-                        INNER JOIN user ON post.author = user.id ORDER BY ' . $order . ' ' . $orderParam . ' LIMIT ' . $this->getPageRange() . ' OFFSET ' .  $shift * $range;
-        }
-
-        $query = $db->prepare($sql);
-
-        $query->execute();
-
-        return $query->fetchAll(\PDO::FETCH_OBJ);
+        return $this->postEntity->getPaginationList($range, $this->getPageRange(), $shift, $order, $orderParam);
     }
 }
