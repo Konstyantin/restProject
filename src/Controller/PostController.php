@@ -83,7 +83,9 @@ class PostController extends RESTController
 
             echo $data;
 
-            return Request::setStatus(StatusRequest::POST_SUCCESS); // status 200
+            Request::setStatus(StatusRequest::POST_SUCCESS); // status 200
+
+            die();
         }
 
         return Request::setStatus(StatusRequest::POST_NOT_FOUND);   // status 404

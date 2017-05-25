@@ -10,6 +10,8 @@
         http: 'http://',
         route: 'index',
 
+        token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=',
+
         /**
          * Set route
          *
@@ -67,9 +69,12 @@
             this.delete();
         };
 
+
+        this.testMethod;
         var that = this,
             container = $('.post-container-list'),   //container which store post
-            postItem = container.find('.post-item'); //posts
+            postItem = container.find('.post-item'), //posts
+            deleteBtn = postItem.find('.btn-danger');
 
         // update post
         this.update = function () {
@@ -90,11 +95,19 @@
                     return that.buildUpdateField($this);
                 }
             });
-
         };
 
+        // delete post
         this.delete = function () {
+            deleteBtn.on('click', function (e) {
+                e.preventDefault();
 
+                var $this = $(this),
+                    post = $this.parents('.post-item'),
+                    postId = post.attr('id');
+
+                post.remove();
+            })
         };
 
         this.create = function () {
@@ -142,12 +155,33 @@
 
     function Request() {
 
+        this.__proto__ = settings;
+
+        this.sendRequest = function (route, data = null, method) {
+
+            var that = this;
+
+            that.setRouute(route);
+
+            $.ajax({
+                url: that.getPath(),
+                type: method,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-AUTH_TOKEN', that.token)},
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        };
+
+        this.test = function () {
+            console.log('test');
+        }
     }
 
     function ClientREST() {
 
     }
-
+    
     var event = new Event();
 
     event.init();
