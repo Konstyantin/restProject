@@ -7,9 +7,12 @@
 
         sendData: function () {
             $.ajax({
-                url: 'http://localhost/index',
+                url: 'http://dcodeit.net/kostya.nagula/project/restProject/index',
                 method: 'POST',
-                data: {name: 'test'},
+                data: {
+                    order: 'title',
+                    orderParam: 'ASC'
+                },
                 success: function (data) {
                     console.log(data);
                 }

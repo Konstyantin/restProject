@@ -144,11 +144,12 @@ class Pagination
      * Get pagination data
      *
      * @param $range
+     * @param int $shift
      * @param null $order
-     * @param $shift
+     * @param string $orderParam
      * @return array
      */
-    public function getPaginationData($range, $order = null, $shift = 1)
+    public function getPaginationData($range, $shift = 1, $order = null, $orderParam = 'ASC')
     {
         $db = Db::connect();
 
@@ -160,6 +161,15 @@ class Pagination
                        user.name as author,
                        post.created_at FROM post
                         INNER JOIN user ON post.author = user.id LIMIT ' . $this->getPageRange() . ' OFFSET ' .  $shift * $range;
+
+        if ($order) {
+            $sql = 'SELECT post.id,
+                       post.title,
+                       post.content,
+                       user.name as author,
+                       post.created_at FROM post
+                        INNER JOIN user ON post.author = user.id ORDER BY ' . $order . ' ' . $orderParam . ' LIMIT ' . $this->getPageRange() . ' OFFSET ' .  $shift * $range;
+        }
 
         $query = $db->prepare($sql);
 

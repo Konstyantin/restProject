@@ -118,7 +118,7 @@ class Request
      */
     public function getPostParam(string $param)
     {
-        return $_POST[$param];
+        return $_POST[$param] ?? null;
     }
 
     /**

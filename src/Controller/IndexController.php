@@ -28,6 +28,10 @@ class IndexController extends Controller
     public function indexAction(int $id = null)
     {
         // get active pagination step
+        $order = $this->getPostParam('order');
+
+        $orderParam = $this->getPostParam('orderParam');
+
         $active = $id ?? 1;
 
         $id = (!$id) ? null : $id - 1;
@@ -36,7 +40,7 @@ class IndexController extends Controller
 
         $pagination->setPageRange(10);
 
-        $result = $pagination->getPaginationData(10, null, $id);
+        $result = $pagination->getPaginationData(10, $id);
 
         $steps = $pagination->getSteps();
 
