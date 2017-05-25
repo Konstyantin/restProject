@@ -16,18 +16,22 @@
                 <tbody>
 
                 <?php foreach ($data['result'] as $post): ?>
-                    <div class="post-item" id="<?= $post->id?>">
-                        <tr>
+                        <tr class="post-item" id="<?=$post->id?>">
                             <td><?= $post->id; ?></td>
-                            <td><?= $post->title; ?></td>
-                            <td><?= $post->content?></td>
+                            <td class="post-item-title">
+                                <div>
+                                    <?= $post->title; ?>
+                                </div>
+                            </td>
+                            <td class="post-item-content"><?= $post->content?></td>
                             <td><?= $post->author ?></td>
-                            <td><?= $post->created_at; ?></td>
-                            <td>
-                                <div><a href="" class="btn btn-danger">Delete</a></div>
+                            <td><?= gmdate("Y-m-d H:i:s", $post->created_at);?></td>
+                            <td class="post-manage-list">
+                                <div class="post-manage-item">
+                                    <a href="" class="btn btn-danger">Delete</a>
+                                </div>
                             </td>
                         </tr>
-                    </div>
                 <?php endforeach; ?>
 
                 </tbody>
