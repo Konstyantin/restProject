@@ -16,6 +16,8 @@
 
     function Event() {
 
+        this.request = new Request();
+
         var that = this,
             container = $('.post-container'),
             postList = container.find('.post-item'),
@@ -33,7 +35,8 @@
 
                var $this = $(this),
                    post = $this.parents('.post-item'),
-                   postId = post.attr('id');
+                   postId = post.attr('id'),
+                   route = 'post/' + postId;
 
                postList.removeClass('active');
 
@@ -43,8 +46,20 @@
                });
 
                if (!that.checkUpdateField(post)) {
+                   post.addClass('active');
                    that.buildUpdateField(post);
                }
+
+               postList.on('click','.update-post-btn', function (e) {
+                   e.preventDefault();
+
+                   var data = that.getFormData(post);
+
+                   data = JSON.stringify(data);
+
+                   console.log(route, data);
+                   that.request.sendRequest(route, 'PUT', data);
+               });
             });
         };
 
@@ -52,7 +67,6 @@
             createBtn.on('click', function (e) {
                 e.preventDefault();
 
-                console.log('create');
             });
         };
 
@@ -60,8 +74,15 @@
             postList.on('click', '.delete-post-btn', function (e) {
                 e.preventDefault();
 
-                console.log('delete');
-            })
+                var $this = $(this),
+                    post = $this.parents('.post-item'),
+                    postId = post.attr('id'),
+                    route = 'post/' + postId;
+
+                that.request.sendRequest(route, 'DELETE');
+
+                post.remove();
+            });
         }
     }
 
@@ -90,6 +111,8 @@
             $.ajax({
                 url: that.getPath(),
                 method: method,
+                contentType: 'application/json',
+                dataType: 'json',
                 data: data,
                 beforeSend: function(xhr){xhr.setRequestHeader('X-AUTH_TOKEN', 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=')},
                 success: function (data) {
@@ -97,6 +120,7 @@
                 }
             });
         };
+
     }
 
     function FormEditor() {
@@ -125,6 +149,21 @@
             titleContainer.append(this.postTitle);
             containerContainer.append(this.postContent);
             postManageList.append(this.postUpdateBtn);
+        };
+
+        this.getFormData = function (post) {
+
+            var title = post.find('.post-title-field').val(),
+                content = post.find('.post-content-field').val(),
+                updateBtn = post.find('.update-post-btn'),
+                author = post.find('.author').text(),
+                data = {};
+
+            return data = {
+                'title' : title,
+                'content': content,
+                'author': author
+            };
         }
     }
 
