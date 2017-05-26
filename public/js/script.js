@@ -1,8 +1,8 @@
 ;(function ($, undefined) {
 
     var settings = {
-        host: 'localhost',
-        pathDir: '/',
+        host: 'dcodeit.net',
+        pathDir: '/kostya.nagula/project/restProject/',
         route: 'index',
 
         token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0='
@@ -11,7 +11,8 @@
     var template = {
         postContent: '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
         postTitle: '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
-        postUpdateBtn: '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>'
+        postUpdateBtn: '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>',
+        postCreateForm: '<div class="add-post-form clearfix"><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-title-field" placeholder="Title"></div><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-content-field" placeholder="Content"></div><a href="" class="btn btn-success create-post-btn">Create</a></div>'
     };
 
     function Event() {
@@ -21,7 +22,7 @@
         var that = this,
             container = $('.post-container'),
             postList = container.find('.post-item'),
-            createBtn = container.find('.create-post-btn');
+            createBtn = container.find('.add-post-btn');
 
         this.init = function () {
             this.update();
@@ -31,35 +32,34 @@
 
         this.update = function () {
             postList.on('click', '.edit-post-btn', function (e) {
-               e.preventDefault();
+                e.preventDefault();
 
-               var $this = $(this),
-                   post = $this.parents('.post-item'),
-                   postId = post.attr('id'),
-                   route = 'post/' + postId;
+                var $this = $(this),
+                    post = $this.parents('.post-item'),
+                    postId = post.attr('id'),
+                    route = 'post/' + postId;
 
-               postList.removeClass('active');
+                postList.removeClass('active');
 
-               $.each(postList, function () {
-                   var post = $(this);
+                $.each(postList, function () {
+                    var post = $(this);
                     that.deleteUpdateField(post);
-               });
+                });
 
-               if (!that.checkUpdateField(post)) {
-                   post.addClass('active');
-                   that.buildUpdateField(post);
-               }
+                if (!that.checkUpdateField(post)) {
+                    post.addClass('active');
+                    that.buildUpdateField(post);
+                }
 
-               postList.on('click','.update-post-btn', function (e) {
-                   e.preventDefault();
+                postList.on('click', '.update-post-btn', function (e) {
+                    e.preventDefault();
 
-                   var data = that.getFormData(post);
+                    var data = that.getFormData(post);
 
-                   data = JSON.stringify(data);
+                    data = JSON.stringify(data);
 
-                   console.log(route, data);
-                   that.request.sendRequest(route, 'PUT', data);
-               });
+                    that.request.sendRequest(route, 'PUT', data);
+                });
             });
         };
 
@@ -67,6 +67,25 @@
             createBtn.on('click', function (e) {
                 e.preventDefault();
 
+                var addPostContainer = $('.add-post-container');
+
+                that.addPostForm(addPostContainer);
+
+                container.on('click', '.create-post-btn', function (e) {
+                    e.preventDefault();
+
+                    var title = container.find('.create-post-title-field').val(),
+                        content = container.find('.create-post-content-field').val();
+
+                    var data = {
+                        'title': title,
+                        'content': content
+                    };
+
+                    data = JSON.stringify(data);
+
+                    that.request.sendRequest('post', 'POST', data);
+                });
             });
         };
 
@@ -99,7 +118,7 @@
         };
 
         this.getPath = function () {
-            return 'http://' + this.host + '/' + this.route;
+            return 'http://' + this.host + this.pathDir + this.route;
         };
 
         this.sendRequest = function (route, method, data = null) {
@@ -114,7 +133,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: data,
-                beforeSend: function(xhr){xhr.setRequestHeader('X-AUTH_TOKEN', 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=')},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-AUTH_TOKEN', 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=')
+                },
                 success: function (data) {
 
                 }
@@ -132,7 +153,7 @@
                 content = post.find('.post-content-field'),
                 updateBtn = post.find('.update-post-btn');
 
-            return (title.length && content.length && updateBtn.length) ? true :false;
+            return (title.length && content.length && updateBtn.length) ? true : false;
         };
 
         this.deleteUpdateField = function (post) {
@@ -160,10 +181,18 @@
                 data = {};
 
             return data = {
-                'title' : title,
+                'title': title,
                 'content': content,
                 'author': author
             };
+        };
+
+        this.addPostForm = function (container) {
+            var child = container.children();
+
+            if (!child.length) {
+                container.append(this.postCreateForm);
+            }
         }
     }
 
