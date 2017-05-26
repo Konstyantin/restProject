@@ -14,5 +14,6 @@ return [
     'post/' => 'post/itemParam/$1', // get, delete, put
     'post' => 'post/item',          // post
     'index/' => 'index/index/$1',
-    'index' => 'index/index'
+    'index' => 'index/index',
+    'change/' => 'index/changeList/$1'
 ];

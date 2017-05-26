@@ -19,6 +19,21 @@ use App\Db;
 class Post
 {
     /**
+     * @var int $postCount stored count post into database
+     */
+    private $postCount;
+
+    /**
+     * Get post count
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->postCount;
+    }
+
+    /**
      * Create new Post with passed params
      *
      * @param string $title
@@ -230,94 +245,45 @@ class Post
         return $postList;
     }
 
-    /**
-     * Build SQL query for get list
-     *
-     * Get Post list by table column and sort param
-     *
-     * @param string|null $column
-     * @param string|null $param ASC|DESC
-     * @return string
-     */
-    public function buildOrderByParams(string $column = null, string $param = null)
-    {
-        $param = $param ?? 'ASC';
-
-        if ($column) {
-            return "SELECT post.id AS id,
-                           post.title,
-                           post.content,
-                           post.created_at,
-                           user.name AS author FROM post
-                            INNER JOIN user ON post.author = user.id
-                           ORDER BY " . $column . " " . $param;
-        }
-
-        return "SELECT post.id AS id,
-                       post.title,
-                       post.content,
-                       post.created_at,
-                       user.name AS author FROM post
-                        INNER JOIN user ON post.author = user.id
-                       ORDER BY id" . " $param";
-    }
-
-    /**
-     * Get count steps pagination
-     *
-     * @param int $count
-     * @return float|int
-     */
-    public function getStepCount(int $count)
+    public function getPostCount()
     {
         $db = Db::connect();
 
-        $sql = 'SELECT * FROM post';
+        $sql = 'SELECT id FROM post';
 
         $query = $db->prepare($sql);
 
         $query->execute();
 
-        $result = $query->fetchAll(\PDO::FETCH_OBJ);
+        $result = $query->fetchAll(PDO::FETCH_OBJ);
 
-        return count($result)/$count;
+        return count($result);
     }
 
     /**
-     * Get pagination list
+     * Get list post by limit count
      *
-     * Get pagination post list by send parama
-     *
-     * @param $range
-     * @param $pageRange
-     * @param $shift
-     * @param null $order
-     * @param string $orderParam
+     * @param $offset
      * @return array
      */
-    public function getPaginationList($range, $pageRange, $shift, $order = null, $orderParam = 'ASC')
+    public function getListPost($offset = null)
     {
         $db = Db::connect();
 
-        $sql = 'SELECT post.id,
-                       post.title,
-                       post.content,
-                       user.name as author,
-                       post.created_at FROM post
-                        INNER JOIN user ON post.author = user.id LIMIT ' . $pageRange . ' OFFSET ' .  $shift * $range;
+        $this->postCount = $this->getPostCount();
 
-        if ($order) {
-            $sql = 'SELECT post.id,
-                       post.title,
-                       post.content,
-                       user.name as author,
-                       post.created_at FROM post
-                        INNER JOIN user ON post.author = user.id ORDER BY ' . $order . ' ' . $orderParam . ' LIMIT ' . $pageRange . ' OFFSET ' .  $shift * $range;
+        $sql = 'SELECT post.id, post.title, post.content, user.name as author, post.created_at FROM post INNER JOIN user ON post.author = user.id LIMIT 20';
+
+        if ($offset) {
+            $sql = 'SELECT post.id, post.title, post.content, user.name as author, post.created_at FROM post INNER JOIN user ON post.author = user.id LIMIT 20 OFFSET ' . $offset;
         }
+
         $query = $db->prepare($sql);
 
         $query->execute();
 
-        return $query->fetchAll(\PDO::FETCH_OBJ);
+        $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
     }
 }

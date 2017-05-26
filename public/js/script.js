@@ -15,9 +15,9 @@
      * Stored template component for dynamic element
      */
     var template = {
-        postContent:    '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
-        postTitle:      '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
-        postUpdateBtn:  '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>',
+        postContent: '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
+        postTitle: '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
+        postUpdateBtn: '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>',
         postCreateForm: '<div class="add-post-form clearfix"><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-title-field" placeholder="Title"></div><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-content-field" placeholder="Content"></div><a href="" class="btn btn-success create-post-btn">Create</a></div>'
     };
 
@@ -104,11 +104,11 @@
 
                         post.removeClass('active');
                         // add success flash message
-                        mainHeader.after(that.addFlashMessage('success', 'success', 'Post update success'));
+                        // mainHeader.after(that.addFlashMessage('success', 'success', 'Post update success'));
                     }
 
                     // add error flash message
-                    mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is empty'));
+                    // mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is empty'));
                 });
             });
         };
@@ -149,10 +149,10 @@
 
                         addPostContainer.empty();
 
-                        return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
+                        // return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
                     }
 
-                    return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is not valid'));
+                    // return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is not valid'));
                 });
             });
 
@@ -205,6 +205,10 @@
      */
     function Request() {
 
+        this.postList = null;
+
+        this.postCount = null;
+
         // inherit setting property
         this.__proto__ = settings;
 
@@ -253,18 +257,29 @@
             $.ajax({
                 url: that.getPath(),                // set url for send request
                 method: method,                     // set request method
-                contentType: 'application/json',    // set content type
-                dataType: 'json',                   // set data type
-                data: data,                         // send data
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-AUTH_TOKEN', 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0=')    //set access token
-                },
-                success: function (data) {
-
+                data: data,
+                headers: {
+                    'content-type': 'application/json',
+                    'X-AUTH_TOKEN': 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0='
                 }
             });
         };
 
+        this.getPostList = function (route) {
+            var that = this;
+
+            that.setRoute(route);
+
+            $.ajax({
+                url: that.getPath(),
+                method: 'GET',
+                success: function (data) {
+                    data = JSON.parse(data);
+                    that.postList = data.list;
+                    that.postCount = data.count;
+                }
+            });
+        }
     }
 
     /**
@@ -390,7 +405,34 @@
 
     function LoadPost() {
 
+        this.offset = 20;
+        
+        this.checkBottom = function () {
+            var scrollTop = $(window).scrollTop(),
+                winHeight = $(window).height(),
+                docHeight = $(document).height(),
+                route = 'change/' + this.offset;
+
+            if (scrollTop + winHeight == docHeight) {
+
+            }
+        };
+
+        this.scrollPage = function () {
+
+            var that = this;
+
+            $(window).scroll(function () {
+                that.checkBottom();
+            });
+        };
+
+        this.scrollPage();
     }
+
+    LoadPost.prototype = new Request();
+
+    var load = new LoadPost();
 
     var client = new Client();
 
