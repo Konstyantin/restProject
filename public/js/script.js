@@ -15,9 +15,9 @@
      * Stored template component for dynamic element
      */
     var template = {
-        postContent: '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
-        postTitle: '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
-        postUpdateBtn: '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>',
+        postContent:    '<div><input type="text" class="form-control post-content-field" placeholder="Content"></div>',
+        postTitle:      '<div><input type="text" class="form-control post-title-field" placeholder="Title"></div>',
+        postUpdateBtn:  '<div><a href="" class="btn btn-primary update-post-btn">Update</a></div>',
         postCreateForm: '<div class="add-post-form clearfix"><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-title-field" placeholder="Title"></div><div class="col-lg-3 post-form-field"><input type="text" class="form-control create-post-content-field" placeholder="Content"></div><a href="" class="btn btn-success create-post-btn">Create</a></div>'
     };
 
@@ -36,7 +36,8 @@
         var that = this,
             container = $('.post-container'),               // main container which store list of post
             postList = container.find('.post-item'),        // post list
-            createBtn = container.find('.add-post-btn');    // add btn which add form for create new post
+            createBtn = container.find('.add-post-btn'),    // add btn which add form for create new post
+            mainHeader = container.find('.main-header');    // main header page
 
         // init manage event
         this.init = function () {
@@ -87,15 +88,27 @@
                     var data = that.getFormData(post),
                         $this = ($this);
 
-                    that.deleteUpdateField(post);
+                    // check field data
+                    if (that.checkEmptyData(data)) {
 
-                    // convert data to json
-                    dataJson = JSON.stringify(data);
+                        // delete update field
+                        that.deleteUpdateField(post);
 
-                    // send request
-                    that.request.sendRequest(route, 'PUT', dataJson);
+                        // convert data to json
+                        dataJson = JSON.stringify(data);
 
-                    that.setPostData(post, data);
+                        // send request
+                        that.request.sendRequest(route, 'PUT', dataJson);
+
+                        that.setPostData(post, data);
+
+                        post.removeClass('active');
+                        // add success flash message
+                        mainHeader.after(that.addFlashMessage('success', 'success', 'Post update success'));
+                    }
+
+                    // add error flash message
+                    mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is empty'));
                 });
             });
         };
@@ -126,13 +139,24 @@
                         'content': content
                     };
 
-                    // convert data to JSON
-                    data = JSON.stringify(data);
+                    if (that.checkEmptyData(data)) {
 
-                    // send POST request
-                    that.request.sendRequest('post', 'POST', data);
+                        // convert data to JSON
+                        dataJson = JSON.stringify(data);
+
+                        // send POST request
+                        that.request.sendRequest('post', 'POST', dataJson);
+
+                        addPostContainer.empty();
+
+                        return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
+                    }
+
+                    return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is not valid'));
                 });
             });
+
+            return null;
         };
 
         /**
@@ -154,8 +178,22 @@
 
                 // remove post item
                 post.remove();
+
+                mainHeader.after(that.addFlashMessage('success', 'Success', 'Post was deleted success'));
             });
-        }
+        };
+
+        /**
+         * Get flash message
+         *
+         * @param status
+         * @param subject
+         * @param message
+         * @returns {string}
+         */
+        this.addFlashMessage = function (status, subject, message) {
+            return '<div class="alert alert-' + status + ' alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + subject + ' </strong>' + message + '</div>'
+        };
     }
 
     /**
@@ -292,13 +330,11 @@
             var title = post.find('.post-title-field').val(),
                 content = post.find('.post-content-field').val(),
                 updateBtn = post.find('.update-post-btn'),
-                author = post.find('.author').text(),
                 data = {};
 
             return data = {
                 'title': title,
                 'content': content,
-                'author': author
             };
         };
 
@@ -313,6 +349,10 @@
             if (!child.length) {
                 container.append(this.postCreateForm);
             }
+        };
+
+        this.checkEmptyData = function (data) {
+            return (data.title && data.content) ? true : false;
         };
 
         /**
@@ -342,11 +382,14 @@
         this.event = new Event();
         this.request = new Request();
         this.formEdit = new FormEditor();
-        var path = this.request.getPath();
 
         this.run = function () {
             this.event.init();
         }
+    }
+
+    function LoadPost() {
+
     }
 
     var client = new Client();

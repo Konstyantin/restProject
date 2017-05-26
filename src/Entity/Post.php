@@ -319,6 +319,5 @@ class Post
         $query->execute();
 
         return $query->fetchAll(\PDO::FETCH_OBJ);
-
     }
 }
