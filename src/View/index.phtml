@@ -25,10 +25,10 @@
                         <tr class="post-item" id="<?=$post->id?>">
                             <td><?= $post->id; ?></td>
                             <td class="post-item-title">
-                                <div><?= $post->title; ?></div>
+                                <div class="post-title-value"><?= $post->title; ?></div>
                             </td>
                             <td class="post-item-content">
-                                <div><?= $post->content; ?></div>
+                                <div class="post-content-value"><?= $post->content; ?></div>
                             </td>
                             <td class="author"><?= $post->author ?></td>
                             <td><?= gmdate("Y-m-d H:i:s", $post->created_at);?></td>
