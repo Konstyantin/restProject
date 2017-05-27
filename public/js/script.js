@@ -52,7 +52,7 @@
         this.update = function () {
 
             // attach event for dynamic button
-            postList.on('click', '.edit-post-btn', function (e) {
+            container.on('click', '.edit-post-btn', function (e) {
                 e.preventDefault();
 
                 var $this = $(this),
@@ -81,7 +81,7 @@
                 }
 
                 // attach click event for dynamic element
-                postList.on('click', '.update-post-btn', function (e) {
+                container.on('click', '.update-post-btn', function (e) {
                     e.preventDefault();
 
                     // get data from field
@@ -165,7 +165,7 @@
         this.delete = function () {
 
             // attach click event
-            postList.on('click', '.delete-post-btn', function (e) {
+            container.on('click', '.delete-post-btn', function (e) {
                 e.preventDefault();
 
                 var $this = $(this),
@@ -406,24 +406,95 @@
     function LoadPost() {
 
         this.offset = 20;
-        
+
+        this.route = 'change/' + this.offset;
+
+        /**
+         * Check bottom
+         *
+         * Check bottom scroll page after load new posts
+         */
         this.checkBottom = function () {
+
             var scrollTop = $(window).scrollTop(),
                 winHeight = $(window).height(),
-                docHeight = $(document).height(),
-                route = 'change/' + this.offset;
+                docHeight = $(document).height();
 
             if (scrollTop + winHeight == docHeight) {
 
+                if (this.checkPostCount()) {
+                    this.offset = this.offset + 20;
+
+                    this.route = 'change/' + this.offset;
+
+                    if (this.checkPostCount()) {
+                        this.getPostList(this.route);
+                    }
+
+                    this.appendPost();
+                }
             }
         };
 
+        /**
+         * Load post where scroll page
+         */
         this.scrollPage = function () {
 
             var that = this;
 
+            this.checkCalculatePostCount();
+
             $(window).scroll(function () {
                 that.checkBottom();
+            });
+        };
+
+        /**
+         * Check calculate post count after make request and get post count
+         */
+        this.checkCalculatePostCount = function () {
+            if (!this.postCount) {
+                this.getPostList(this.route);
+            }
+        };
+
+        /**
+         * Check post count
+         *
+         * @returns {boolean}
+         */
+        this.checkPostCount = function () {
+            return this.offset < this.postCount
+        };
+
+        /**
+         * Append load post to post list
+         */
+        this.appendPost = function () {
+
+            var tableBody = $('tbody');
+
+            $.each(this.postList, function () {
+                tableBody.append('' +
+                    '<tr class="post-item" id="' + this.id + '">' +
+                        '<td>' + this.id + '</td>' +
+                        '<td class="post-item-title">' +
+                            '<div class="post-title-value">' + this.title + '</div>' +
+                        '</td>' +
+                        '<td class="post-item-content">' +
+                            '<div class="post-content-value">' + this.content + '</div>' +
+                        '</td>' +
+                        '<td class="author"> ' + this.author + '</td>' +
+                        '<td>2017-03-21 15:44:43</td>' +
+                        '<td class="post-manage-list">' +
+                            '<div class="post-manage-item">' +
+                                '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
+                                '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
+                            '</div>' +
+                        '</td>' +
+                    '</tr>'
+                );
             });
         };
 

@@ -37,6 +37,13 @@ class IndexController extends Controller
         ]);
     }
 
+    /**
+     * Change list action
+     *
+     * Change post list
+     *
+     * @param int $offset
+     */
     public function changeListAction(int $offset)
     {
         $post = new Post();
