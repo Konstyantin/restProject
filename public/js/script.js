@@ -4,8 +4,8 @@
      * Base settings which store host, pathDir, route, token
      */
     var settings = {
-        host: 'dcodeit.net',
-        pathDir: '/kostya.nagula/project/restProject/',
+        host: 'localhost',
+        pathDir: '/',
         route: 'index',
 
         token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0='
@@ -279,7 +279,24 @@
                     that.postCount = data.count;
                 }
             });
-        }
+        };
+
+        // this.sendUpdatePostList = function (route, postList) {
+        //     var that = this;
+        //
+        //     that.setRoute(route);
+        //
+        //     // $.ajax({
+        //     //     url: that.getPath(),
+        //     //     method: 'POST',
+        //     //     // data: {
+        //     //     //     list: postList
+        //     //     // },
+        //     //     success: function (data) {
+        //     //         console.log(data);
+        //     //     }
+        //     // });
+        // }
     }
 
     /**
@@ -405,6 +422,8 @@
 
     function LoadPost() {
 
+        this.postDisplayList = [];
+
         this.offset = 20;
 
         this.route = 'change/' + this.offset;
@@ -496,7 +515,25 @@
                     '</tr>'
                 );
             });
+
+            this.getDisplayPost();
         };
+
+        this.getDisplayPost = function () {
+            var postContainer = $('.post-container'),
+                postList = postContainer.find('.post-item'),
+                listElem = [];
+
+            $.each(postList, function () {
+                listElem.push(this.id);
+            });
+
+            this.postDisplayList = listElem;
+
+            // this.sendUpdatePostList('updateTime', listElem);
+        };
+
+        this.getDisplayPost();
 
         this.scrollPage();
     }

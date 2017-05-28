@@ -52,4 +52,9 @@ class IndexController extends Controller
 
         echo json_encode(['list' => $result, 'count' => $post->getCount()]);die();
     }
+
+    public function updateTimeAction()
+    {
+
+    }
 }

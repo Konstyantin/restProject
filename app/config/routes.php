@@ -15,5 +15,6 @@ return [
     'post' => 'post/item',          // post
     'index/' => 'index/index/$1',
     'index' => 'index/index',
-    'change/' => 'index/changeList/$1'
+    'change/' => 'index/changeList/$1',
+    'updateTime' => 'index/updateTime'
 ];

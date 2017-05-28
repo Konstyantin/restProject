@@ -10,6 +10,7 @@ namespace Acme\Entity;
 
 use PDO;
 use App\Db;
+use App\DateTime;
 
 /**
  * Class CRUD
@@ -284,6 +285,62 @@ class Post
 
         $result = $query->fetchAll(PDO::FETCH_OBJ);
 
+        $result = $this->convertDate($result);
+
         return $result;
+    }
+
+    /**
+     * Calculate time after created post
+     *
+     * @param $post
+     * @return false|string
+     */
+    public function calculatePostCreated($post)
+    {
+        $diffTime = TIME - $post->created_at;
+
+        if ($diffTime > DateTime::MONTH) {
+            return gmdate("m-d H:i:s", $diffTime);
+        }
+
+        if ($diffTime > DateTime::DAY) {
+            return gmdate("d H:i:s", $diffTime);
+        }
+
+        if ($diffTime > DateTime::HOUR) {
+            return gmdate("H:i:s", $diffTime);
+        }
+
+        if ($diffTime > DateTime::MINUTE) {
+            return gmdate("i:s", $diffTime);
+        }
+
+        if ($diffTime > DateTime::SECOND) {
+            return gmdate("s", $diffTime);
+        }
+    }
+
+    /**
+     * Converted Date
+     *
+     * Converted created_at date value from unix time to datetime
+     *
+     * @param $postList
+     * @return mixed
+     */
+    public function convertDate($postList)
+    {
+        foreach ($postList as $post) {
+            $this->calculatePostCreated($post);
+            $post->created_at = $this->calculatePostCreated($post);
+        }
+
+        return $postList;
+    }
+
+    public function getPostByIdList()
+    {
+
     }
 }
