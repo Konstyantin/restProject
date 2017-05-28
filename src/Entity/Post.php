@@ -339,8 +339,33 @@ class Post
         return $postList;
     }
 
-    public function getPostByIdList()
+    public function concatPostIdList($list)
     {
+        $param = null;
 
+        foreach ($list as $item) {
+            $param = $param . ', ' . $item;
+        }
+
+        return trim($param, ', ');
+    }
+
+    public function getPostsByIdList($list)
+    {
+        $db = Db::connect();
+
+        $param = $this->concatPostIdList($list);
+
+        $sql = "SELECT post.id, post.created_at FROM post WHERE post.id IN ($param)";
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+        $result = $this->convertDate($result);
+
+        return $result;
     }
 }

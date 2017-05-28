@@ -19,6 +19,13 @@ use App\Pagination;
  */
 class IndexController extends Controller
 {
+    private $post;
+
+    public function __construct()
+    {
+        $this->post = new Post();
+    }
+
     /**
      * Index action
      *
@@ -28,9 +35,7 @@ class IndexController extends Controller
      */
     public function indexAction(int $id = null)
     {
-        $post = new Post();
-
-        $result = $post->getListPost();
+        $result = $this->post->getListPost();
 
         return $this->render('index', [
             'result' => $result,
@@ -46,15 +51,20 @@ class IndexController extends Controller
      */
     public function changeListAction(int $offset)
     {
-        $post = new Post();
+        $result = $this->post->getListPost($offset);
 
-        $result = $post->getListPost($offset);
-
-        echo json_encode(['list' => $result, 'count' => $post->getCount()]);die();
+        echo json_encode(['list' => $result, 'count' => $this->post->getCount()]);die();
     }
 
     public function updateTimeAction()
     {
+        $list = $this->getPostParam('list') ?? null;
 
+        if ($list) {
+
+            $list = $this->post->getPostsByIdList($list);
+
+            echo json_encode($list);
+        }
     }
 }

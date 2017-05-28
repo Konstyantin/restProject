@@ -205,9 +205,11 @@
      */
     function Request() {
 
-        this.postList = null;
+        this.postList = null;       // post list
 
-        this.postCount = null;
+        this.postCount = null;      // count post into database
+
+        this.diffCreated = null;    // difference between create at date and now date
 
         // inherit setting property
         this.__proto__ = settings;
@@ -265,6 +267,13 @@
             });
         };
 
+        /**
+         * Get post list
+         *
+         * Get post list from database and load post to ajax
+         *
+         * @param route
+         */
         this.getPostList = function (route) {
             var that = this;
 
@@ -281,22 +290,28 @@
             });
         };
 
-        // this.sendUpdatePostList = function (route, postList) {
-        //     var that = this;
-        //
-        //     that.setRoute(route);
-        //
-        //     // $.ajax({
-        //     //     url: that.getPath(),
-        //     //     method: 'POST',
-        //     //     // data: {
-        //     //     //     list: postList
-        //     //     // },
-        //     //     success: function (data) {
-        //     //         console.log(data);
-        //     //     }
-        //     // });
-        // }
+        /**
+         * Get difference post value
+         *
+         * Send request to action which calculate difference between created date
+         * and now date time
+         *
+         * @param list list post which is displayed
+         */
+        this.getDiffPostCreated = function (list) {
+
+            var that = this;
+
+            $.ajax({
+                url: 'http://localhost/updateTime',
+                method: 'POST',
+                data: {list: list},
+                success:function (data) {
+                    data = JSON.parse(data);
+                    that.diffCreated = data;
+                }
+            });
+        }
     }
 
     /**
@@ -435,22 +450,28 @@
          */
         this.checkBottom = function () {
 
-            var scrollTop = $(window).scrollTop(),
-                winHeight = $(window).height(),
-                docHeight = $(document).height();
+            var scrollTop = $(window).scrollTop(),  // scroll regarding top page
+                winHeight = $(window).height(),     // window height
+                docHeight = $(document).height();   // document height
 
             if (scrollTop + winHeight == docHeight) {
 
                 if (this.checkPostCount()) {
+
+                    // set step load next post
                     this.offset = this.offset + 20;
 
+                    // set route
                     this.route = 'change/' + this.offset;
 
                     if (this.checkPostCount()) {
                         this.getPostList(this.route);
                     }
 
+                    // append received posts
                     this.appendPost();
+
+                    this.getDisplayPost();
                 }
             }
         };
@@ -505,7 +526,7 @@
                             '<div class="post-content-value">' + this.content + '</div>' +
                         '</td>' +
                         '<td class="author"> ' + this.author + '</td>' +
-                        '<td>2017-03-21 15:44:43</td>' +
+                        '<td class="created_at">' + this.created_at + '</td>' +
                         '<td class="post-manage-list">' +
                             '<div class="post-manage-item">' +
                                 '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
@@ -515,26 +536,71 @@
                     '</tr>'
                 );
             });
-
-            this.getDisplayPost();
         };
 
+        /**
+         * Get display post
+         *
+         * Get result post with load new post and update created_at value
+         */
         this.getDisplayPost = function () {
-            var postContainer = $('.post-container'),
-                postList = postContainer.find('.post-item'),
-                listElem = [];
 
+            var that = this,
+                postContainer = $('.post-container'),           // block which store post list
+                postList = postContainer.find('.post-item'),    // list post items
+                listElem = [];                                  // stored list post id which is displayed
+
+            // add post id to array if post is displayed
             $.each(postList, function () {
                 listElem.push(this.id);
             });
 
+            // set value
             this.postDisplayList = listElem;
 
-            // this.sendUpdatePostList('updateTime', listElem);
+            this.updateDiffCreate(this.postDisplayList, postList);
         };
 
-        this.getDisplayPost();
+        /**
+         * Update difference created_at value
+         *
+         * @param list
+         * @param postList
+         */
+        this.updateDiffCreate = function (list, postList) {
 
+            // send request to action which update create difference value
+            this.getDiffPostCreated(list);
+
+            var that = this;
+
+            $.each(postList, function () {
+                var post = $(this),
+                    postId = post.attr('id'),
+                    created_at = post.find('.created_at');
+
+                $.each(that.diffCreated, function () {
+                    if (postId == this.id) {
+                        created_at.text(this.created_at);
+                    }
+                })
+            });
+        };
+
+        /**
+         * Call update post value difference
+         */
+        this.timer = function () {
+
+            var that = this;
+
+            setInterval(function () {
+                that.getDisplayPost();
+            }, 7000);
+        };
+
+        this.timer();
+        
         this.scrollPage();
     }
 
