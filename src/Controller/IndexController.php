@@ -96,4 +96,11 @@ class IndexController extends Controller
 
         echo json_encode($result);
     }
+
+    public function lastAction()
+    {
+        $last = $this->post->getLastPost();
+
+        echo json_encode($last);
+    }
 }

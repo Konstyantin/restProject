@@ -18,4 +18,5 @@ return [
     'change/' => 'index/changeList/$1',
     'updateTime' => 'index/updateTime',
     'order' => 'index/order',
+    'last' => 'index/last',
 ];

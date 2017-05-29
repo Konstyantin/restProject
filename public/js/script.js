@@ -594,8 +594,6 @@
         };
 
         this.timer();
-
-        this.scrollPage();
     }
 
 
@@ -738,6 +736,7 @@
         // call run
         this.run = function () {
             this.event.init();
+            this.load.scrollPage();
         }
     }
 
