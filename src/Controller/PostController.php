@@ -252,7 +252,7 @@ class PostController extends RESTController
 
         // check passed availability params
         // requirements for update exists post
-        if ($post && $title && $content) {
+        if ($post && $title || $content) {
 
             $crud->updatePost($id, $title, $content);
             return Request::setStatus(StatusRequest::POST_NO_CONTENT); // status 204

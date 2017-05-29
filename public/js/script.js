@@ -399,7 +399,7 @@
         };
 
         this.checkEmptyData = function (data) {
-            return (data.title && data.content) ? true : false;
+            return (data.title || data.content) ? true : false;
         };
 
         /**
@@ -412,8 +412,13 @@
             var title = post.find('.post-title-value'),
                 content = post.find('.post-content-value');
 
-            title.text(data.title);
-            content.text(data.content);
+            if (data.title) {
+                title.text(data.title);
+            }
+
+            if (data.content) {
+                content.text(data.content);
+            }
         }
     }
 
@@ -513,7 +518,7 @@
                     '<td class="post-item-content">' +
                     '<div class="post-content-value">' + this.content + '</div>' +
                     '</td>' +
-                    '<td class="author"> ' + this.author + '</td>' +
+                    '<td class="author">' + this.author + '</td>' +
                     '<td class="created_at">' + this.created_at + '</td>' +
                     '<td class="post-manage-list">' +
                     '<div class="post-manage-item">' +
