@@ -15,9 +15,22 @@
 }
 
 .post-form-field {
-    padding:0 10px 0 0 ;
+    padding: 0 10px 0 0;
 }
 
 .dynamic-edit-btn {
     margin-left: 4px;
 }
+
+.order-container {
+    display: inline-block;
+}
+
+.order-container span {
+    opacity: .3;
+}
+
+.order-container .active {
+    opacity: 1;
+}
+

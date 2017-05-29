@@ -16,5 +16,6 @@ return [
     'index/' => 'index/index/$1',
     'index' => 'index/index',
     'change/' => 'index/changeList/$1',
-    'updateTime' => 'index/updateTime'
+    'updateTime' => 'index/updateTime',
+    'order' => 'index/order',
 ];

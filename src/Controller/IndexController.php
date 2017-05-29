@@ -56,6 +56,9 @@ class IndexController extends Controller
         echo json_encode(['list' => $result, 'count' => $this->post->getCount()]);die();
     }
 
+    /**
+     * Update time action
+     */
     public function updateTimeAction()
     {
         $list = $this->getPostParam('list') ?? null;
@@ -66,5 +69,16 @@ class IndexController extends Controller
 
             echo json_encode($list);
         }
+    }
+
+    public function orderAction()
+    {
+        $column = $this->getPostParam('column') ?? null;
+        $param = $this->getPostParam('param') ?? null;
+        $count = $this->getPostParam('count') ?? null;
+
+        $result = $this->post->orderPostByParams($column, $param, $count);
+
+        echo json_encode($result);
     }
 }

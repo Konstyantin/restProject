@@ -4,8 +4,8 @@
      * Base settings which store host, pathDir, route, token
      */
     var settings = {
-        host: 'localhost',
-        pathDir: '/',
+        host: 'dcodeit.net',
+        pathDir: '/kostya.nagula/project/restProject/',
         route: 'index',
 
         token: 'eyJpZCI6MSwidGltZSI6MTQ5MDI3MDg5Mn0='
@@ -303,10 +303,10 @@
             var that = this;
 
             $.ajax({
-                url: 'http://localhost/updateTime',
+                url: 'http://dcodeit.net/kostya.nagula/project/restProject/updateTime',
                 method: 'POST',
                 data: {list: list},
-                success:function (data) {
+                success: function (data) {
                     data = JSON.parse(data);
                     that.diffCreated = data;
                 }
@@ -435,6 +435,11 @@
         }
     }
 
+    /**
+     * Load Post
+     *
+     * @constructor
+     */
     function LoadPost() {
 
         this.postDisplayList = [];
@@ -518,21 +523,21 @@
             $.each(this.postList, function () {
                 tableBody.append('' +
                     '<tr class="post-item" id="' + this.id + '">' +
-                        '<td>' + this.id + '</td>' +
-                        '<td class="post-item-title">' +
-                            '<div class="post-title-value">' + this.title + '</div>' +
-                        '</td>' +
-                        '<td class="post-item-content">' +
-                            '<div class="post-content-value">' + this.content + '</div>' +
-                        '</td>' +
-                        '<td class="author"> ' + this.author + '</td>' +
-                        '<td class="created_at">' + this.created_at + '</td>' +
-                        '<td class="post-manage-list">' +
-                            '<div class="post-manage-item">' +
-                                '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
-                                '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
-                            '</div>' +
-                        '</td>' +
+                    '<td>' + this.id + '</td>' +
+                    '<td class="post-item-title">' +
+                    '<div class="post-title-value">' + this.title + '</div>' +
+                    '</td>' +
+                    '<td class="post-item-content">' +
+                    '<div class="post-content-value">' + this.content + '</div>' +
+                    '</td>' +
+                    '<td class="author"> ' + this.author + '</td>' +
+                    '<td class="created_at">' + this.created_at + '</td>' +
+                    '<td class="post-manage-list">' +
+                    '<div class="post-manage-item">' +
+                    '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
+                    '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
+                    '</div>' +
+                    '</td>' +
                     '</tr>'
                 );
             });
@@ -600,8 +605,121 @@
         };
 
         this.timer();
-        
+
         this.scrollPage();
+    }
+
+
+    /**
+     * Order post
+     *
+     * Component which use for order post list
+     *
+     * @constructor
+     */
+    function OrderPost() {
+
+        this.selectOrder = function () {
+
+            var that = this,
+                container = $('.post-container'),                       // post container
+                orderContainer = container.find('.order-container'),    // order container which store btn for select order
+                orderBtn = orderContainer.find('span');                 // order btn for select order
+
+
+            // attach click event to btn
+            orderBtn.on('click', function () {
+
+                var $this = $(this),
+                    countPostView = container.find('.post-item').length,            // count view posts
+                    orderColumn = $this.parents('.order-container').attr('id'),     // get order column name
+                    orderParam = null;                                              // order param ASC DESC
+
+                // remove active class for all order btn
+                orderBtn.removeClass('active');
+
+                // add class active for current click btn
+                $this.addClass('active');
+
+                if (that.checkOrderBtn($this)) {
+                    orderParam = 'DESC';
+                } else {
+                    orderParam = 'ASC';
+                }
+
+                that.sendOrderRequest(orderColumn, orderParam, countPostView);
+            });
+        };
+
+        /**
+         * Check order button is order to top or to bottom
+         *
+         * @param elem
+         * @returns {*}
+         */
+        this.checkOrderBtn = function (elem) {
+            return $(elem).hasClass('glyphicon-triangle-top');
+        };
+
+        /**
+         * Send order param request
+         *
+         * @param column
+         * @param param
+         * @param count
+         */
+        this.sendOrderRequest = function (column, param, count) {
+
+            var that = this;
+
+            $.ajax({
+                url: 'http://dcodeit.net/kostya.nagula/project/restProject/order',
+                method: 'POST',
+                data: {
+                    column: column,
+                    param: param,
+                    count: count
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    that.updateOrderList(data);
+                }
+            });
+        };
+
+        /**
+         * Update order post list
+         *
+         * @param postList
+         */
+        this.updateOrderList = function (postList) {
+            var postContainerBody = $('tbody');
+            postContainerBody.empty();
+
+            $.each(postList, function () {
+                postContainerBody.append('' +
+                    '<tr class="post-item" id="' + this.id + '">' +
+                    '<td>' + this.id + '</td>' +
+                    '<td class="post-item-title">' +
+                    '<div class="post-title-value">' + this.title + '</div>' +
+                    '</td>' +
+                    '<td class="post-item-content">' +
+                    '<div class="post-content-value">' + this.content + '</div>' +
+                    '</td>' +
+                    '<td class="author"> ' + this.author + '</td>' +
+                    '<td class="created_at">' + this.created_at + '</td>' +
+                    '<td class="post-manage-list">' +
+                    '<div class="post-manage-item">' +
+                    '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
+                    '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>'
+                );
+            });
+        };
+
+        this.selectOrder();
     }
 
     LoadPost.prototype = new Request();
@@ -609,6 +727,8 @@
     var load = new LoadPost();
 
     var client = new Client();
+
+    var orderPost = new OrderPost();
 
     client.run();
 

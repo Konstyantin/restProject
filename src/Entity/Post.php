@@ -339,6 +339,14 @@ class Post
         return $postList;
     }
 
+    /**
+     * Concatenate post id list
+     *
+     * Concatenate post id list for use into sql query
+     *
+     * @param $list
+     * @return string
+     */
     public function concatPostIdList($list)
     {
         $param = null;
@@ -350,6 +358,12 @@ class Post
         return trim($param, ', ');
     }
 
+    /**
+     * Get post list by list id posts
+     *
+     * @param $list
+     * @return array|mixed
+     */
     public function getPostsByIdList($list)
     {
         $db = Db::connect();
@@ -357,6 +371,31 @@ class Post
         $param = $this->concatPostIdList($list);
 
         $sql = "SELECT post.id, post.created_at FROM post WHERE post.id IN ($param)";
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+        $result = $this->convertDate($result);
+
+        return $result;
+    }
+
+    /**
+     * Order post by params
+     *
+     * @param $column
+     * @param $param
+     * @param $limit
+     * @return array|mixed
+     */
+    public function orderPostByParams($column, $param, $limit)
+    {
+        $db = Db::connect();
+
+        $sql = "SELECT * FROM post ORDER BY $column $param LIMIT $limit";
 
         $query = $db->prepare($sql);
 
