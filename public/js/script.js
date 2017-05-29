@@ -417,23 +417,6 @@
         }
     }
 
-    /**
-     * Event extend FormEditor
-     *
-     * @type {FormEditor}
-     */
-    Event.prototype = new FormEditor();
-
-    function Client() {
-
-        this.event = new Event();
-        this.request = new Request();
-        this.formEdit = new FormEditor();
-
-        this.run = function () {
-            this.event.init();
-        }
-    }
 
     /**
      * Load Post
@@ -722,14 +705,36 @@
         this.selectOrder();
     }
 
+    /**
+     * Event extend FormEditor
+     *
+     * @type {FormEditor}
+     */
+    Event.prototype = new FormEditor();
+
+    /**
+     * LoadPost extend Request
+     *
+     * @type {Request}
+     */
     LoadPost.prototype = new Request();
 
-    var load = new LoadPost();
+    function Client() {
+
+        this.event          = new Event();
+        this.request        = new Request();
+        this.formEdit       = new FormEditor();
+        this.load           = new LoadPost();
+        this.orderPost      = new OrderPost();
+
+        // call run
+        this.run = function () {
+            this.event.init();
+        }
+    }
 
     var client = new Client();
-
-    var orderPost = new OrderPost();
-
+    
     client.run();
 
 })(jQuery);

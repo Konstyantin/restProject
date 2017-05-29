@@ -395,7 +395,7 @@ class Post
     {
         $db = Db::connect();
 
-        $sql = "SELECT * FROM post ORDER BY $column $param LIMIT $limit";
+        $sql = "SELECT post.id, post.title, post.content, user.name as author, post.created_at FROM post INNER JOIN user ON post.author = user.id ORDER BY $column $param LIMIT $limit";
 
         $query = $db->prepare($sql);
 
