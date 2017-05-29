@@ -407,4 +407,26 @@ class Post
 
         return $result;
     }
+
+    /**
+     * Get last post
+     *
+     * Get last post from list exist posts
+     *
+     * @return array
+     */
+    public function getLastPost()
+    {
+        $db = Db::connect();
+
+        $sql = 'SELECT post.id, post.title, post.content, post.created_at, user.name as author FROM post INNER JOIN user ON post.author = user.id ORDER BY post.id DESC LIMIT 1';
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
+    }
 }

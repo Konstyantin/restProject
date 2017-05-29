@@ -19,8 +19,14 @@ use App\Pagination;
  */
 class IndexController extends Controller
 {
+    /**
+     * @var Post post entity class
+     */
     private $post;
 
+    /**
+     * IndexController constructor.
+     */
     public function __construct()
     {
         $this->post = new Post();
@@ -36,6 +42,8 @@ class IndexController extends Controller
     public function indexAction(int $id = null)
     {
         $result = $this->post->getListPost();
+
+        $last = $this->post->getLastPost();
 
         return $this->render('index', [
             'result' => $result,
@@ -53,7 +61,9 @@ class IndexController extends Controller
     {
         $result = $this->post->getListPost($offset);
 
-        echo json_encode(['list' => $result, 'count' => $this->post->getCount()]);die();
+        $last = $this->post->getLastPost();
+
+        echo json_encode(['list' => $result, 'count' => $this->post->getCount(), 'lastPost' => $last]);die();
     }
 
     /**
@@ -71,6 +81,11 @@ class IndexController extends Controller
         }
     }
 
+    /**
+     * Order Action
+     *
+     * Make sort post list by send params
+     */
     public function orderAction()
     {
         $column = $this->getPostParam('column') ?? null;

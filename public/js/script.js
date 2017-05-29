@@ -95,7 +95,7 @@
                         that.deleteUpdateField(post);
 
                         // convert data to json
-                        dataJson = JSON.stringify(data);
+                        var dataJson = JSON.stringify(data);
 
                         // send request
                         that.request.sendRequest(route, 'PUT', dataJson);
@@ -117,6 +117,8 @@
          * Create post method
          */
         this.create = function () {
+
+            var that = this;
 
             // attach click event to add btn
             createBtn.on('click', function (e) {
@@ -142,7 +144,7 @@
                     if (that.checkEmptyData(data)) {
 
                         // convert data to JSON
-                        dataJson = JSON.stringify(data);
+                        var dataJson = JSON.stringify(data);
 
                         // send POST request
                         that.request.sendRequest('post', 'POST', dataJson);
@@ -215,21 +217,22 @@
         this.__proto__ = settings;
 
         /**
-         * Get current route
-         *
-         * @returns {string}
-         */
-        this.getRoute = function () {
-            return window.location.href;
-        };
-
-        /**
          * Set value for route property
          *
          * @param route
          */
         this.setRoute = function (route) {
             this.route = route;
+        };
+
+        /**
+         * Get request Route
+         *
+         * @param route
+         * @returns {string}
+         */
+        this.getRequestRoute = function (route) {
+            return 'http://' + this.host + this.pathDir + route;
         };
 
         /**
@@ -254,10 +257,8 @@
 
             var that = this;
 
-            that.setRoute(route);
-
             $.ajax({
-                url: that.getPath(),                // set url for send request
+                url: that.getRequestRoute(route),  // set url for send request
                 method: method,                     // set request method
                 data: data,
                 headers: {
@@ -303,7 +304,7 @@
             var that = this;
 
             $.ajax({
-                url: 'http://dcodeit.net/kostya.nagula/project/restProject/updateTime',
+                url: that.getRequestRoute('updateTime'),
                 method: 'POST',
                 data: {list: list},
                 success: function (data) {
@@ -430,9 +431,9 @@
      */
     function LoadPost() {
 
-        this.postDisplayList = [];
+        this.postDisplayList = [];  // store list post id
 
-        this.offset = 20;
+        this.offset = 20;           // step define new count load post
 
         this.route = 'change/' + this.offset;
 
@@ -661,7 +662,7 @@
             var that = this;
 
             $.ajax({
-                url: 'http://dcodeit.net/kostya.nagula/project/restProject/order',
+                url: that.getRequestRoute('order'),
                 method: 'POST',
                 data: {
                     column: column,
@@ -723,6 +724,8 @@
      * @type {Request}
      */
     LoadPost.prototype = new Request();
+
+    OrderPost.prototype = new Request();
 
     function Client() {
 
