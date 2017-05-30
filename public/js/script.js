@@ -56,9 +56,7 @@
                 e.preventDefault();
 
                 var $this = $(this),
-                    post = $this.parents('.post-item'),
-                    postId = post.attr('id'),
-                    route = 'post/' + postId;
+                    post = $this.parents('.post-item');
 
                 if (post.hasClass('active')) {
                     post.removeClass('active');
@@ -79,37 +77,41 @@
                     post.addClass('active');
                     that.buildUpdateField(post);
                 }
+            });
 
-                // attach click event for dynamic element
-                container.on('click', '.update-post-btn', function (e) {
-                    e.preventDefault();
+            // attach click event for dynamic element
+            container.on('click', '.update-post-btn', function (e) {
+                e.preventDefault();
 
-                    // get data from field
-                    var data = that.getFormData(post),
-                        $this = ($this);
+                // get data from field
 
-                    // check field data
-                    if (that.checkEmptyData(data)) {
+                var $this = $(this),
+                    post = $this.parents('.post-item'),
+                    postId = post.attr('id'),
+                    data = that.getFormData(post),
+                    route = 'post/' + postId;
 
-                        // delete update field
-                        that.deleteUpdateField(post);
+                // check field data
+                if (that.checkEmptyData(data)) {
 
-                        // convert data to json
-                        var dataJson = JSON.stringify(data);
+                    // delete update field
+                    that.deleteUpdateField(post);
 
-                        // send request
-                        that.request.sendRequest(route, 'PUT', dataJson);
+                    // convert data to json
+                    var dataJson = JSON.stringify(data);
 
-                        that.setPostData(post, data);
+                    // send request
+                    that.request.sendRequest(route, 'PUT', dataJson);
 
-                        post.removeClass('active');
-                        // add success flash message
-                        // mainHeader.after(that.addFlashMessage('success', 'success', 'Post update success'));
-                    }
+                    that.setPostData(post, data);
 
-                    // add error flash message
-                    // mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is empty'));
-                });
+                    post.removeClass('active');
+                    // add success flash message
+                    return mainHeader.after(that.addFlashMessage('success', 'success', 'Post update success'));
+                }
+
+                // add error flash message
+                return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is empty'));
             });
         };
 
@@ -128,37 +130,37 @@
 
                 // add field for create new post
                 that.addPostForm(addPostContainer);
-
-                // attach click event
-                container.on('click', '.create-post-btn', function (e) {
-                    e.preventDefault();
-
-                    var title = container.find('.create-post-title-field').val(),       // get title value new post
-                        content = container.find('.create-post-content-field').val();   // get content value new post
-
-                    var data = {
-                        'title': title,
-                        'content': content
-                    };
-
-                    if (that.checkEmptyData(data)) {
-
-                        // convert data to JSON
-                        var dataJson = JSON.stringify(data);
-
-                        // send POST request
-                        that.request.sendRequest('post', 'POST', dataJson);
-
-                        addPostContainer.empty();
-
-                        // return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
-                    }
-
-                    // return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is not valid'));
-                });
             });
 
-            return null;
+            // attach click event
+            container.on('click', '.create-post-btn', function (e) {
+                e.preventDefault();
+
+                var title = container.find('.create-post-title-field').val(),       // get title value new post
+                    content = container.find('.create-post-content-field').val();   // get content value new post
+
+                var addPostContainer = $('.add-post-container');
+
+                var data = {
+                    'title': title,
+                    'content': content
+                };
+
+                if (that.checkEmptyData(data)) {
+
+                    // convert data to JSON
+                    var dataJson = JSON.stringify(data);
+
+                    // send POST request
+                    that.request.sendRequest('post', 'POST', dataJson);
+
+                    addPostContainer.empty();
+
+                    return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
+                }
+
+                return mainHeader.after(that.addFlashMessage('danger', 'Error', 'Data is not valid'));
+            });
         };
 
         /**
