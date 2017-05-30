@@ -301,7 +301,7 @@
          *
          * @param list list post which is displayed
          */
-        this.getDiffPostCreated = function (list) {
+        this.getDiffPostCreated = function (list, postList) {
 
             var that = this;
 
@@ -312,6 +312,8 @@
                 success: function (data) {
                     data = JSON.parse(data);
                     that.diffCreated = data;
+
+                    that.changeCreated(postList, that.diffCreated);
                 }
             });
         }
@@ -466,8 +468,6 @@
 
                     // append received posts
                     this.appendPost();
-
-                    this.getDisplayPost();
                 }
             }
         };
@@ -566,16 +566,22 @@
         this.updateDiffCreate = function (list, postList) {
 
             // send request to action which update create difference value
-            this.getDiffPostCreated(list);
+            this.getDiffPostCreated(list, postList);
+        };
 
-            var that = this;
-
-            $.each(postList, function () {
+        /**
+         * Change post create difference value
+         * 
+         * @param list
+         * @param date
+         */
+        this.changeCreated = function (list, date) {
+            $.each(list, function () {
                 var post = $(this),
                     postId = post.attr('id'),
                     created_at = post.find('.created_at');
 
-                $.each(that.diffCreated, function () {
+                $.each(date, function () {
                     if (postId == this.id) {
                         created_at.text(this.created_at);
                     }
