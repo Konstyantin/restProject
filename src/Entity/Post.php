@@ -425,8 +425,21 @@ class Post
 
         $query->execute();
 
-        $result = $query->fetchAll(PDO::FETCH_OBJ);
+        $result = $query->fetch(PDO::FETCH_OBJ);
 
         return $result;
+    }
+
+    public function getAuthorByToken($token)
+    {
+        $db = Db::connect();
+
+        $sql = "SELECT user.username FROM user WHERE token='$token'";
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        return $query->fetch(PDO::FETCH_OBJ);
     }
 }

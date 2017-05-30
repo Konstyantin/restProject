@@ -156,6 +156,8 @@
 
                     addPostContainer.empty();
 
+                    that.request.appendNewPost(data);
+
                     return mainHeader.after(that.addFlashMessage('success', 'Success', 'Post created success'));
                 }
 
@@ -314,6 +316,43 @@
                     that.diffCreated = data;
 
                     that.changeCreated(postList, that.diffCreated);
+                }
+            });
+        };
+
+        this.appendNewPost = function (dataPost) {
+            var that = this;
+
+            $.ajax({
+                url: that.getRequestRoute('author'),
+                method: 'POST',
+                data: {token: that.token},
+                success: function (data) {
+                    data = JSON.parse(data);
+
+                    console.log(data);
+                    var tableBody = $('tbody'),
+                        id = data.last.id + 1,
+                        postItem = '<tr class="post-item" id="' + id + '">' +
+                            '<td>' + id + '</td>' +
+                            '<td class="post-item-title">' +
+                            '<div class="post-title-value">' + dataPost.title + '</div>' +
+                            '</td>' +
+                            '<td class="post-item-content">' +
+                            '<div class="post-content-value">' + dataPost.content + '</div>' +
+                            '</td>' +
+                            '<td class="author">' + data.author.username + '</td>' +
+                            '<td class="created_at"> 1</td>' +
+                            '<td class="post-manage-list">' +
+                            '<div class="post-manage-item">' +
+                            '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
+                            '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+
+                    tableBody.append(postItem);
+
                 }
             });
         }

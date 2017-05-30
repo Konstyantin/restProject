@@ -97,10 +97,17 @@ class IndexController extends Controller
         echo json_encode($result);
     }
 
-    public function lastAction()
+    /**
+     * Get author by send token
+     */
+    public function authorAction()
     {
+        $token = $this->getPostParam('token');
+
         $last = $this->post->getLastPost();
 
-        echo json_encode($last);
+        $author = $this->post->getAuthorByToken($token);
+
+        echo json_encode(['author' => $author, 'last' => $last]);
     }
 }
