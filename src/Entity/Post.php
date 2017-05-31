@@ -258,7 +258,7 @@ class Post
 
         $result = $query->fetchAll(PDO::FETCH_OBJ);
 
-        return count($result);
+        return count($result) - 1;
     }
 
     /**
@@ -427,6 +427,7 @@ class Post
 
         $result = $query->fetch(PDO::FETCH_OBJ);
 
+        $result->id = $result->id + 1;
         return $result;
     }
 

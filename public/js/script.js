@@ -139,7 +139,8 @@
                 var title = container.find('.create-post-title-field').val(),       // get title value new post
                     content = container.find('.create-post-content-field').val();   // get content value new post
 
-                var addPostContainer = $('.add-post-container');
+                var addPostContainer = $('.add-post-container'),
+                    postList = $('.post-item');
 
                 var data = {
                     'title': title,
@@ -320,6 +321,11 @@
             });
         };
 
+        /**
+         * Append new post to post list
+         *
+         * @param dataPost
+         */
         this.appendNewPost = function (dataPost) {
             var that = this;
 
@@ -330,31 +336,44 @@
                 success: function (data) {
                     data = JSON.parse(data);
 
-                    console.log(data);
-                    var tableBody = $('tbody'),
-                        id = data.last.id + 1,
-                        postItem = '<tr class="post-item" id="' + id + '">' +
-                            '<td>' + id + '</td>' +
-                            '<td class="post-item-title">' +
-                            '<div class="post-title-value">' + dataPost.title + '</div>' +
-                            '</td>' +
-                            '<td class="post-item-content">' +
-                            '<div class="post-content-value">' + dataPost.content + '</div>' +
-                            '</td>' +
-                            '<td class="author">' + data.author.username + '</td>' +
-                            '<td class="created_at"> 1</td>' +
-                            '<td class="post-manage-list">' +
-                            '<div class="post-manage-item">' +
-                            '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
-                            '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
-                            '</div>' +
-                            '</td>' +
-                            '</tr>';
-
-                    tableBody.append(postItem);
-
+                    that.addLastPostItem(dataPost, data);
                 }
             });
+        };
+
+        /**
+         * Add new post to end view post list
+         *
+         * @param dataPost
+         * @param data
+         */
+        this.addLastPostItem = function (dataPost, data) {
+            var tableBody = $('tbody'),
+                viewPostCount = $('.post-item').length,
+                id = data.last.id,
+                postItem = '<tr class="post-item" id="' + id + '">' +
+                    '<td>' + id + '</td>' +
+                    '<td class="post-item-title">' +
+                    '<div class="post-title-value">' + dataPost.title + '</div>' +
+                    '</td>' +
+                    '<td class="post-item-content">' +
+                    '<div class="post-content-value">' + dataPost.content + '</div>' +
+                    '</td>' +
+                    '<td class="author">' + data.author.username + '</td>' +
+                    '<td class="created_at"> 1</td>' +
+                    '<td class="post-manage-list">' +
+                    '<div class="post-manage-item">' +
+                    '<a href="" class="btn btn-danger delete-post-btn">Delete</a>' +
+                    '<a href="" class="btn btn-success edit-post-btn dynamic-edit-btn">Edit</a>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
+
+            // check if view post count is more post count into database or equally post count into database
+            // then append post to view post list
+            if (viewPostCount >= data.count) {
+                tableBody.append(postItem);
+            }
         }
     }
 

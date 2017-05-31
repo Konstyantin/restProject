@@ -108,6 +108,8 @@ class IndexController extends Controller
 
         $author = $this->post->getAuthorByToken($token);
 
-        echo json_encode(['author' => $author, 'last' => $last]);
+        $count = $this->post->getPostCount();
+
+        echo json_encode(['author' => $author, 'last' => $last, 'count' => $count]);
     }
 }
