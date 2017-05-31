@@ -531,6 +531,25 @@
         };
 
         /**
+         * Scroll page to top
+         */
+        this.scrollTopPage = function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 0) {
+                    $('#scroller').fadeIn();
+                } else {
+                    $('#scroller').fadeOut();
+                }
+            });
+            $('#scroller').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 400);
+                return false;
+            });
+        };
+
+        /**
          * Load post where scroll page
          */
         this.scrollPage = function () {
@@ -775,6 +794,7 @@
         this.selectOrder();
     }
 
+
     /**
      * Event extend FormEditor
      *
@@ -803,6 +823,7 @@
         this.run = function () {
             this.event.init();
             this.load.scrollPage();
+            this.load.scrollTopPage();
         }
     }
 

@@ -34,3 +34,14 @@
     opacity: 1;
 }
 
+#scroller{
+    position: fixed;
+    /** позиция кнопки scroll to top **/
+    bottom: 30px;
+    right: 30px;
+    /** картинка кнопки наверх**/
+    cursor: pointer;
+    /** скрываем кнопку в начале **/
+    display:none;
+}
+
